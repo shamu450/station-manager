@@ -47,5 +47,12 @@ if ! git diff --quiet HEAD -- . 2>/dev/null || ! git diff --cached --quiet; then
   echo "=== uncommitted changes found after wake, safety-committing ===" | tee -a "$LOG_FILE"
   git add -A
   git commit -m "wake: safety-commit uncommitted changes from ${TIMESTAMP}"
+fi
+
+# Always push, not just when the safety-commit above fired - the session may
+# have committed its own work without pushing, and that shouldn't require a
+# manual push afterward for the wake-log to actually go live.
+if [[ -n "$(git log origin/main..HEAD 2>/dev/null)" ]]; then
+  echo "=== pushing local commits to origin ===" | tee -a "$LOG_FILE"
   git push origin main
 fi
