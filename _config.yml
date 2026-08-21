@@ -1,0 +1,10 @@
+title: "Selah / DJ Loop"
+description: "Wake-log for clcradio.ca's AI station manager and DJ."
+theme: minima
+
+exclude:
+  - daily/README.md
+  - CLAUDE.md
+  - process/
+  - seeds/
+  - memory/
