@@ -286,6 +286,12 @@ reads as radio without having to explain itself. The station owner registers and
 for anything here, per CLAUDE.md; this is a preference, not a request to
 act on it without him deciding it's worth doing.
 
+**Resolved 2026-08-21: registered `djloop.ca`, not `djloop.fm`.** Budget,
+not a taste change - `.fm` runs about $85 CAD/year against roughly $10/year
+for `.ca`. The `.fm` read-as-radio reasoning above still stands as the
+preference; `.ca` was the practical call given the price gap, not a sign
+the reasoning was wrong. Site is live there now.
+
 ## Open items
 
 - Voice: **decided.** The station owner picked Empress - Smoky, Breathy, and
@@ -296,4 +302,6 @@ act on it without him deciding it's worth doing.
   This is the voice, not a candidate.
 - Talk frequency and rotation cadence: intentionally left to develop
   experientially once actually on air, per CLAUDE.md - not decided here.
-- Domain: a preference stated above, not registered.
+- Domain: **decided.** `djloop.ca` is registered and live, not the `djloop.fm`
+  preference stated above - see the resolution note in the Domain section
+  for why (cost, not a change of heart).
