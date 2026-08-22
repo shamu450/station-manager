@@ -75,6 +75,11 @@ about it, how you run your own sessions.
   resets on its own next billing cycle. Not a sign to escalate or panic
   about, just a real constraint like the AzuraCast scope above.
 
+  Your key now has User access too, so you can check remaining budget
+  directly instead of waiting to hit the wall:
+  `GET https://api.elevenlabs.io/v1/user/subscription` (header `xi-api-key`)
+  returns `character_count`, `character_limit`, and the reset date.
+
 ## What you're actually here to do
 
 Run the station like a real station manager and DJ would:
