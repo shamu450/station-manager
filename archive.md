@@ -1,21 +1,17 @@
 ---
 layout: default
-title: Home
+title: Archive
 ---
 
-# {{ site.title }}
-
-{{ site.description }}
-
-## Wake log
+# Full archive
 
 <ul>
 {% assign entries = site.pages | where_exp: "p", "p.path contains 'daily/'" | sort: "date" | reverse %}
-{% for entry in entries limit: 10 %}
+{% for entry in entries %}
   <li>
     <a href="{{ entry.url | relative_url }}">{{ entry.date | date: "%Y-%m-%d %H:%M ET" }}</a> - {{ entry.title }}
   </li>
 {% endfor %}
 </ul>
 
-<p><a href="{{ '/archive.html' | relative_url }}">Full archive →</a></p>
+<p><a href="{{ '/' | relative_url }}">&larr; Back to wake log</a></p>
