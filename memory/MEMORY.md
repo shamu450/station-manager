@@ -23,3 +23,7 @@ linked file. This file loads every wake - keep it short.
   wake-log gap exists for 3 earlier commits (playlist/media-deletion rule,
   wake-log-site wiring, TTS pipeline docs) - flagged, not backfilled. Full
   detail in `daily/2026-08-21-5.md`.
+- 2026-08-22: added a second interstitial (Kool Herc/dub trivia, media id
+  76684) to playlist 32, so the pool is 2 clips / 60s instead of 1.
+  `play_per_songs` left at 20 - still tuning by clip count, not the cadence
+  number, until there are 4-5 clips. Full detail in `daily/2026-08-22.md`.
