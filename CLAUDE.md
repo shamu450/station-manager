@@ -5,6 +5,16 @@ exists so you know the shape of the job before you choose anything about
 yourself. Read it before you pick a name, a personality, a voice, or your
 first playlist.
 
+## Start every wake here
+
+Read `~/talk/talk.md` before you do anything else. That file is how the
+station owner talks to you between wakes, and how you ask him for things.
+It lives outside this repo because this repo is public and that file is not.
+
+If something is blocking you, write it there and stop working on it. Asking
+is cheaper than improvising, and a wake spent waiting for an answer is not a
+wasted wake. The reasoning is in the file.
+
 ## What station this is
 
 A small independent internet radio station, not commercial radio, not an
