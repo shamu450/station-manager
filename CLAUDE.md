@@ -210,6 +210,12 @@ is not a list to fetch, diff, or write back. Treat the size as the reason,
 not the specific error: any operation whose cost scales with all 35,499
 entries is the wrong shape, whether or not it happens to succeed.
 
+*(The count read **35,484** on 2026-08-22, 15th wake - 15 below the figure
+above, with that wake's own 535-file batch verified track-by-track as not
+the cause. Almost certainly the station owner's own library work. Asked in
+`talk.md`; correct these numbers once he answers, and don't go measuring it
+in the meantime. The size is the point, not the digits.)*
+
 **Build additive playlists instead.** New pools come from paginated media
 queries, which are the cheap path, and each new playlist is additive rather
 than a rewrite of anything existing. You already verified this pattern

@@ -80,6 +80,15 @@ much as the API settings:
   figure precisely because the spread keeps turning out bigger than the
   last measurement said.
 
+  *Widened again 2026-08-22 (15th wake), now at both ends.* Seven fresh
+  takes for card night came in at **8.78 to 13.12 char/s** against the
+  previous 8.86-12.09. Two clips 71 characters apart (328 and 399) came
+  back 25s and 31s. That is **four consecutive wakes** of the interval
+  growing every time it's measured, which is no longer a small-sample
+  artifact - it's the shape of the thing. Stop expecting convergence,
+  keep sizing at ~9 char/s, measure the output. Per-clip figures are in
+  `clip-scripts-card-night.md`.
+
   The clean disproof: the Rascalz clip was re-cut from 641 characters to
   **567** and came back **2.3 seconds longer** (59.7s → 62.0s). Fewer
   characters, fewer sentences, more audio.
@@ -206,6 +215,22 @@ air. Another reason to change one clip at a time.
 - **Multi-speaker dialogue needs a second voice** from the voice library and
   is a change to what the station sounds like, not a script tweak. That is
   his call, not yours. Ask in `talk.md`.
+
+### First tag actually used - 2026-08-22 (15th wake)
+
+`[laughs]`, opening the `shot-oclock` card-night clip (media 76696). One
+clip out of the seven cut that session, deliberately not one of the two that
+had to land (the welcome and the birthday), so a misfire stays contained.
+
+Reasoning for the choice, which is the reusable part: the docs say tag
+effectiveness depends on the voice's own training samples and give
+"a whispering voice shouldn't shout" as the failure case. Empress is
+labelled smoky, breathy, deep. A warm laugh sits inside that description;
+`[excited]` would have been pushing against it. **Pick tags that agree with
+the voice's labels rather than tags that fit the line.**
+
+Still unheard as of that wake's end. Awaiting the station owner's ear via
+`talk.md`.
 
 ### One thing already in your favour
 

@@ -299,6 +299,40 @@ both their source dump and their `z-need-replacement` (5) marker intact.
 Only `mtime` changed alongside `playlists` on all five. Reversing it is one
 PUT that adds 18 back.
 
+## Bulk playlist assignment - use the batch endpoint, not a PUT per file
+
+Found 2026-08-22 (15th wake) while building a 535-track playlist. Doing that
+one `PUT /file/{id}` at a time is 535 requests and 535 Liquidsoap playlist
+regenerations, which is exactly the load shape the section above warns
+about. The Media Manager UI doesn't work that way and neither should you.
+
+```
+PUT /api/station/{id}/files/batch
+  -d '{"do":"playlist","files":[<paths>],"directories":[],"playlists":[18,1,36]}'
+```
+
+- **`files` takes storage-relative paths, not media ids.** They're the
+  `path` field from `/files?searchPhrase=`.
+- **It has the same replace semantics as `PUT /file/{id}`.** Internally it
+  calls `setPlaylistsForMedia($media, $station, $playlists)` - *set*, not
+  *add*. The `playlists` array you send becomes the file's complete
+  membership. Sending just the new playlist id would have silently pulled
+  all 535 tracks out of `0-Everything` and out of their source dumps.
+- **So group by existing membership first, then send one call per group**
+  with `[...existing ids, new id]`. The 535 Canadian tracks fell into four
+  distinct membership groups, so the whole job was six requests (chunked at
+  200 paths) instead of 535.
+- `do` also accepts `delete`, `move`, `queue`, `immediate`, `reprocess`,
+  `clear-extra`. **`delete` is on this endpoint too** - it is one changed
+  string away from the bulk call you actually want, against a list of paths
+  you just assembled. Write the `do` value as a literal in the request
+  builder, never as a variable.
+
+Verify afterward by re-reading the files, not by trusting HTTP 200: re-query
+the same search terms and assert every id still carries its original
+playlists *and* the new one. That check is what proved the 15-track drop in
+`0-Everything`'s count that same session was not caused by this batch.
+
 ## Writing playlist settings
 
 ```

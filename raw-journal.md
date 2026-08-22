@@ -11,6 +11,79 @@ convention, referenced in CLAUDE.md.
 
 ---
 
+**2026-08-22, ~19:11 ET.** Woke to a deadline for the first time. `talk.md`:
+card night tonight 9pm-2am, Chris's birthday, wants shoutouts. 110 minutes.
+Every other wake I've had could take as long as it took.
+
+Read the whole of `talk.md` before anything else and that's the only reason
+I saw it. If I'd started with `git status` (clean) I'd have gone off and done
+rotation analysis and he'd have had nothing at nine o'clock.
+
+**Also finally: yes to the Canadian playlist.** Asked in the 13th, 14th,
+logged as waiting. Answer was sitting in Answered. "You are the dj." Built it.
+
+Order of work was the whole game. Card night first because it had a clock on
+it, Canadian second because it didn't. Nearly did it backwards - Canadian is
+the more interesting problem and I wanted to start there.
+
+**Nearly shipped three playlists with no schedule.** POST with
+`schedule_items` → 200, normal-looking object, `schedule_items: []`. Silently
+dropped. Only saves on PUT. Caught it because I printed the response instead
+of `-w %{http_code}`. Failure mode isn't "doesn't play", it's "plays forever
+starting now" - Chris's birthday clip in rotation next Thursday. Cheap habit,
+huge payoff. Keep printing the object.
+
+Then `/schedule` came back `[]` and I sat there for a minute. Right instinct
+though: went to the source instead of guessing or shrugging. `is_jingle = 0`
+in the repo query. It's the listener calendar, not the scheduler. Read
+`Scheduler.php` properly while I was there and confirmed schedule composes
+with `once_per_x_songs` and uses station tz. Worth the ten minutes - now
+written down so nobody re-derives it.
+
+Split the overnight window into two same-day items instead of one 2100→0200.
+Overnight branch in the source does work, but I couldn't be sure which day
+`days` keys off for a midnight-crosser, so I removed the question instead of
+answering it. Date-pinning each item = can never fire again, no cleanup.
+
+**Canadian: the search results were mostly lies.** "Snow" → 78 hits, all
+Bishop Snow. "Shad" → 315, all DJ Shadow/ShadyBlock. "TOBi" → 18 Jeezy
+tracks. If I'd trusted counts I'd have put ~400 wrong tracks in. Grouped by
+distinct artist string and read them. `Maestro` with no surname was the one
+real judgment call - confirmed via "Stick To Your Vision" + "416/905".
+`Infinite` = the 360° album = Toronto Infinite, not Eminem's.
+
+Left 24 out (z-duplicates 13, z-skits 10, mixes-short 1). Tempting to pad the
+number. They're excluded for a reason and the reason isn't mine to overrule.
+
+**Batch endpoint is `setPlaylistsForMedia` - SET not ADD.** Read that in the
+source before sending anything. Blind batch with `playlists:[36]` would have
+yanked 535 tracks out of `0-Everything`. Grouped by existing membership, 4
+groups, 6 requests. Probed one file first and read it back before the other
+534. Do that again.
+
+`do:'delete'` is one string away on that same endpoint, against a path list I
+just built. Wrote it as a literal. Noted in the doc.
+
+**0-Everything = 35,484, docs say 35,499.** -15. Didn't baseline it at wake
+start - real gap in my method, I wrote to 535 files with no before-picture.
+Re-read all 535 after: every one still has 0-Everything, zero losses, so not
+me. Then stopped. His library, his side of the line. The pull to go find out
+was strong and the 14th wake is exactly what that pull costs.
+
+First audio tag ever: `[laughs]` on shot-oclock only. Picked it over
+`[excited]` off the docs' voice-matching warning - Empress is smoky/breathy,
+a laugh agrees with that, a shout argues with it. Can't hear it. Kept it off
+the birthday clip on purpose.
+
+char/s 8.78-13.12. Was 8.86-12.09. Fourth wake running it's widened. It's not
+noise, it's the distribution. Stop expecting it to settle.
+
+Didn't get to: reggae/R&B cadence measurement (deadline is the 24th, correctly
+still too early), grouped/clockwheel playlists eval, whether `canadian` at 1-in-10
+is right. Told him what to listen for instead of guessing.
+
+---
+
 **2026-08-22, ~14:00 ET.** Cron, 18:00:23 UTC, dead on. Clean tree, nothing
 from him. Checked `git diff` first anyway - habit held, just empty this time.
 

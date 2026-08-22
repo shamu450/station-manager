@@ -94,6 +94,45 @@ linked file. This file loads every wake - keep it short.
   wakes before anyone acted. Also: tried to confirm they were defective from
   the audio and **couldn't** - see the clipping-baseline entry below. Full
   detail in `daily/2026-08-22-7.md`.
+- 2026-08-22 (15th wake): **first deadline wake** - `talk.md` asked for card
+  night shoutouts for a 9pm party and the wake started at 7:11pm. Seven
+  clips (76694-76700) under `card-night/2026-08-22/`, three date-pinned
+  scheduled playlists (33/34/35). Also built **`canadian` (playlist 36),
+  535 tracks / 33h**, `once_per_x_songs` at 10 - the Canadian catalogue was
+  in the library all along. Scripts in
+  `process/clip-scripts-card-night.md`, full detail in
+  `daily/2026-08-22-8.md`.
+- **`schedule_items` saves on `PUT` only - `POST` silently drops it.**
+  Creating a playlist with a schedule returns 200 and `schedule_items: []`.
+  The failure mode is not "never plays", it's **plays constantly forever**.
+  Always print the response object, never just `%{http_code}`. Scheduling
+  is orthogonal to `type` (window checked first, then cadence) and uses the
+  station timezone. Prefer two same-day items over one midnight-crossing
+  one, and pin `start_date == end_date` so an event playlist can't fire
+  twice. In `process/azuracast-reference.md`.
+- **`GET /station/{id}/schedule` filters `is_jingle = 0`** - it feeds the
+  listener calendar and shares no code with the scheduler. An empty result
+  for a jingle playlist is correct, not a fault. Verify schedules by
+  reading `schedule_items` back off the playlist.
+- **Bulk playlist assignment: `PUT /files/batch`** with `do: playlist` and
+  storage-relative **paths** (not ids). Same replace-everything semantics as
+  `PUT /file/{id}` (`setPlaylistsForMedia` is *set*, not *add*), so group
+  files by existing membership and send `[...existing, new]` per group - 535
+  tracks in 6 requests instead of 535. `do: 'delete'` lives on the same
+  endpoint one string away; write it as a literal. In
+  `process/azuracast-api.md`.
+- **Search results need reading, not counting.** Building `canadian`,
+  "Snow" returned 78 hits (all *Bishop* Snow), "Shad" 315 (DJ Shadow /
+  ShadyBlock), "TOBi" 18 (Jeezy). `searchPhrase` matches artist/title/path,
+  so always group hits by distinct artist string and eyeball them before
+  acting. Ambiguous artist tags resolve from the track list: bare `Maestro`
+  = Maestro Fresh Wes (via "Stick To Your Vision" / "416/905"), `Infinite`
+  = the Toronto MC's *360°*.
+- **Baseline the counter before you write to it.** The 15th wake found
+  `0-Everything` at 35,484 against a documented 35,499 and could not say
+  whether its own 535-file batch caused it, because no count was taken at
+  wake start. Re-reading all 535 proved zero losses, but that was recovery,
+  not method. Record the number you're about to change, first.
 - **Rotation structure, verified by set comparison not assumption.**
   `0-Everything` is the *exact* union of `00-music` + `00-music-dvd-dump` +
   `00-music-ipod-dump` (35,504, zero cross-dump overlap). `reggae` and

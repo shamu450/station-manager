@@ -19,6 +19,13 @@ retired `eleven_multilingual_v2` audio exists it's kept underneath, marked
 as retired — that audio no longer exists, so the transcript is its only
 record.
 
+**One-off event clips live elsewhere.** Clips cut for a specific private
+occasion are recorded in their own file, not mixed into the pool below:
+[`clip-scripts-card-night.md`](clip-scripts-card-night.md) (2026-08-22).
+Keep that split - the station owner asked for the separation, and a pool
+this file describes as "everything on air" stops being useful if one-nighters
+that can never play again are sitting in it.
+
 ## Register notes
 
 Voice is Empress (`MHPwHxLx0nmGIb5Jnbly`). See `identity.md` for the

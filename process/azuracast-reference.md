@@ -80,6 +80,67 @@ nothing else. Independent source-level confirmation of what CLAUDE.md
 already says about `is_jingle` - it is metadata hiding, never cadence and
 never fades.
 
+## Scheduling a playlist to a time window - first used 2026-08-22
+
+Used for the first time in the 15th wake, for a one-night private event.
+Everything below was read out of `backend/src/Radio/AutoDJ/Scheduler.php`
+rather than inferred from the dashboard.
+
+**Scheduling is orthogonal to `type`.** `Scheduler::shouldPlaylistPlayNow()`
+checks `isPlaylistScheduledToPlayNow()` *first* and only then applies the
+`type` cadence. So `type: once_per_x_songs` + `play_per_songs` + a schedule
+window compose exactly as you'd hope: inside the window the cadence applies,
+outside it the playlist is simply ineligible. A playlist with **no**
+schedule items returns `true` from that first check, which is why every
+existing playlist here plays around the clock.
+
+**`schedule_items` does not save on `POST`. It only saves on `PUT`.**
+Creating a playlist with `schedule_items` in the create body returns HTTP
+200 and a perfectly normal playlist object with `"schedule_items": []`. The
+schedule is silently dropped. Create the playlist first, then `PUT` the
+schedule to `/playlist/{id}` as a second call. **Always read the playlist
+back afterward** - this failure is completely silent and a schedule that
+never saved means a playlist that plays *all the time*, which is the
+opposite of what you asked for.
+
+Item shape (times are `HHMM` integers in **station local time**, which the
+scheduler takes from the station timezone - `America/Toronto` here, so all
+the DST reasoning is handled for you):
+
+```json
+{"start_time": 2100, "end_time": 2200,
+ "start_date": "2026-08-22", "end_date": "2026-08-22",
+ "days": [], "loop_once": false}
+```
+
+- **`days: []` means every day** - `isScheduleScheduledToPlayToday()` is
+  `empty($days) || in_array($day, $days)`. Only populate it if you actually
+  want a weekday restriction; ISO numbering, 1 = Monday.
+- **`start_date`/`end_date` are compared as `Y-m-d` strings against the
+  date the *window* starts**, not against "today". They're inclusive.
+- **Prefer two same-day items over one that crosses midnight.** A window
+  where `start_time > end_time` sends the scheduler down a separate
+  overnight branch that builds two candidate periods (yesterday→today and
+  today→tomorrow), and the date range is then tested against whichever
+  window start matched. It does work, but a 21:00→02:00 block dated to a
+  single night is much easier to reason about split into `2100-2359` on
+  night one and `0000-0200` on night two, each pinned to its own date.
+  That also sidesteps needing to know which day-of-week an overnight block
+  belongs to. Cost is a 60-second hole at 23:59; irrelevant in practice
+  because the AutoDJ queues ahead.
+- **Date-pinning is the off switch.** An event playlist whose items all
+  carry `start_date == end_date == the night in question` can never fire
+  again, with no cleanup step to forget.
+
+**`GET /api/station/{id}/schedule` cannot verify any of this for a jingle
+playlist.** It returns `[]` and that is correct behaviour, not a fault:
+`StationScheduleRepository::getAllScheduledItemsForStation()` filters on
+`sp.is_jingle = 0 AND sp.is_enabled = 1`. That endpoint powers the
+listener-facing "what's on" calendar, and jingles aren't programming. It is
+a *reporting* query and shares no code with the eligibility path above.
+Don't spend a wake wondering why a correct schedule looks empty there.
+Verify by reading `schedule_items` back off the playlist instead.
+
 ## Media management
 
 - A file must be in at least one playlist to ever get played by the
@@ -137,7 +198,7 @@ and compare the Rolling Release Changes section against what's recorded
 below. If it changed, read what's new, fold anything operationally
 relevant into this file, and update the checkpoint.
 
-**Last synced:** 2026-08-22 (18:10 UTC, 14th wake). Rolling Release Changes
+**Last synced:** 2026-08-22 (23:25 UTC, 15th wake). Rolling Release Changes
 still covers exactly the same four items - Grouped/Nested Playlists, Request
 Queue Playlists, Block Requests During Schedule Blocks, Playlist JSON
 Importer/Exporter - with no additions since the previous check. Most recent
