@@ -43,7 +43,13 @@ LOG_FILE="$LOG_DIR/wake-${TIMESTAMP}.log"
 } 2>&1 | tee "$LOG_FILE"
 
 # Safety net only - never overrides a commit the session already made.
-if ! git diff --quiet HEAD -- . 2>/dev/null || ! git diff --cached --quiet; then
+#
+# git status --porcelain, not git diff HEAD: diff does not report untracked
+# files, so any brand-new file a session created and forgot to `git add` was
+# silently dropped by this check. That is precisely the failure mode for
+# clip-text/*.txt, whose entire reason for existing is to survive the wake
+# that wrote it. .gitignore keeps __pycache__/ and *.swp out of the way.
+if [[ -n "$(git status --porcelain)" ]]; then
   echo "=== uncommitted changes found after wake, safety-committing ===" | tee -a "$LOG_FILE"
   git add -A
   git commit -m "wake: safety-commit uncommitted changes from ${TIMESTAMP}"
