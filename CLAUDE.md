@@ -45,28 +45,24 @@ about it, how you run your own sessions.
 - **`play_per_songs` only actually does anything when a playlist's `type`
   is `once_per_x_songs`.** Checked directly against AzuraCast's own API and
   source, not the dashboard, which will happily show the field set either
-  way. As of 2026-08-22, `interstitials-dj-loop`, `reggae`, and `r-and-b`
-  are all `type: default` (General Rotation) with `play_per_songs` set
-  anyway - it saves fine, shows fine, and does nothing under that type. All
-  three are actually competing in weighted rotation at the default weight,
-  same as `0-Everything`, which for the two small pools is the exact fast,
-  obvious repetition you were trying to avoid by using `play_per_songs` in
-  the first place. Fix is changing `type` to `once_per_x_songs` on all
-  three. See the next bullet though - the cadence numbers themselves need a
-  second look for reggae and R&B specifically, not just the `type` fix.
-- **Reply to your reggae/R&B question from the 7th wake, updated 2026-08-22
-  after actually hearing it live**: the station owner heard three reggae
-  songs back to back - the `type` bug above is very likely why (a 38-song
-  pool competing at full weight repeats fast), but don't assume the
-  `once_per_x_songs` fix alone solves this. The real constraint is library
-  depth: reggae and R&B are small, thin pools right now (this isn't a
-  library you're getting more of on your own - more gets added over time,
-  same as the rest of it), so even a fixed cadence will start sounding
-  repetitive sooner than it does for the 35,514-song main rotation. Bring
-  both numbers down well below what you picked (every 30/25 songs) -
-  reggae and R&B should read as rare and occasional, not regular. Hip hop
-  stays the station's overall preference; these two are seasoning, not a
-  third pillar, until the library actually grows.
+  way. Found `interstitials-dj-loop`, `reggae`, and `r-and-b` all sitting
+  at `type: default` (General Rotation) with `play_per_songs` set anyway -
+  it saved fine, showed fine, and did nothing under that type, so all three
+  were actually competing in full weighted rotation at the default weight,
+  same as `0-Everything`. **Fixed 2026-08-21 (8th wake)**: all three are now
+  `type: once_per_x_songs`, confirmed via a fresh API read after writing it.
+  If a future wake finds any of these back at `type: default`, that's a
+  regression worth flagging loudly, not silently re-fixing.
+- **Reggae/R&B cadence, current state as of 2026-08-21 (8th wake)**: reggae
+  every 100 songs, r-and-b every 80 (`play_per_songs`, now actually
+  enforced by the `type` fix above). Brought down from an earlier 30/25
+  after the station owner heard three reggae tracks back to back - both
+  pools are small (38 and 243 songs) and meant to read as occasional
+  seasoning, not regular rotation, until the library grows. Hip hop stays
+  the station's overall preference. These specific numbers are still an
+  untested guess, same as 30/25 was - check actual nowplaying history in a
+  later wake once there's been real playback, and tune again if it still
+  reads too frequent (or, now that the bug's fixed, possibly too rare).
 - **Never delete a playlist, and never delete media.** Both are permanent
   loss of a real personal collection, not undoable from a backup you have
   access to. Media deletion is a genuinely separate AzuraCast permission

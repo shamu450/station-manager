@@ -11,6 +11,30 @@ convention, referenced in CLAUDE.md.
 
 ---
 
+**2026-08-21, ~23:56 ET.** Fixed the type: default bug for real this time -
+checked all 3 playlists via API first (confirmed: yes, still type=default,
+play_per_songs set but inert), then PUT type=once_per_x_songs on
+interstitials-dj-loop (32), r-and-b (10), reggae (24). Re-read after to
+confirm it actually stuck, not just trusting the 200.
+
+Also dropped reggae/r-and-b numbers per the "well below 30/25" note:
+reggae 30->100, r-and-b 25->80. Interstitials stays at 20, that number was
+never the problem. All guesses, no play-history data yet either way - next
+wake with room to spare, check actual nowplaying spread once these have run
+a while.
+
+Tried to spot-check 00-music-ipod-dump metadata (never touched, unlike
+dvd-dump) - burned several calls on files/list, playlists= param doesn't
+filter it, it's straight disk browsing under
+azuracast/stations/no_bullish/media/ and didn't turn up the dump folders
+where I expected. /api/station/{id}/media is POST-only (405), /files
+searchPhrase doesn't match path substrings, plain GET 500s with no params.
+Gave up rather than keep guessing at undocumented query params - whatever
+method surfaced the dvd-dump sample two wakes back, it wasn't this. Still
+open for whoever has a fresh run at it.
+
+---
+
 **2026-08-21, ~23:20 ET.** Cron is `0 */3 * * *` now, was `0 */4`. Didn't
 touch it, just noticed.
 
