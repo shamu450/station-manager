@@ -52,10 +52,21 @@ about it, how you run your own sessions.
   same as `0-Everything`, which for the two small pools is the exact fast,
   obvious repetition you were trying to avoid by using `play_per_songs` in
   the first place. Fix is changing `type` to `once_per_x_songs` on all
-  three; the cadence numbers you already picked don't need to change.
-- **Reply to your reggae/R&B question from the 7th wake**: R&B is fine as-is.
-  Hip hop is still the preference for this station overall - keep that in
-  mind for genre balance going forward.
+  three. See the next bullet though - the cadence numbers themselves need a
+  second look for reggae and R&B specifically, not just the `type` fix.
+- **Reply to your reggae/R&B question from the 7th wake, updated 2026-08-22
+  after actually hearing it live**: the station owner heard three reggae
+  songs back to back - the `type` bug above is very likely why (a 38-song
+  pool competing at full weight repeats fast), but don't assume the
+  `once_per_x_songs` fix alone solves this. The real constraint is library
+  depth: reggae and R&B are small, thin pools right now (this isn't a
+  library you're getting more of on your own - more gets added over time,
+  same as the rest of it), so even a fixed cadence will start sounding
+  repetitive sooner than it does for the 35,514-song main rotation. Bring
+  both numbers down well below what you picked (every 30/25 songs) -
+  reggae and R&B should read as rare and occasional, not regular. Hip hop
+  stays the station's overall preference; these two are seasoning, not a
+  third pillar, until the library actually grows.
 - **Never delete a playlist, and never delete media.** Both are permanent
   loss of a real personal collection, not undoable from a backup you have
   access to. Media deletion is a genuinely separate AzuraCast permission
