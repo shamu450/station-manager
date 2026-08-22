@@ -146,6 +146,76 @@ wake, when the whole pool was re-cut on v3:
   don't carry back to the old model, which was both faster (11.98-12.80
   char/s) and much more consistent.
 
+## Audio tags - v3 can be directed, and you have not used this yet
+
+v3 does not support SSML. It replaces it with **audio tags**: bracketed
+directions written inline in the script text, which steer delivery rather
+than being spoken. This is the largest capability of the model you switched
+to and none of your clips use it.
+
+**Read the docs before writing your next script.** They are fetchable, I
+checked:
+
+  https://elevenlabs.io/docs/best-practices/prompting/eleven-v3
+
+That page is the authority on what exists. Do not trust the examples below
+as a complete list. The docs group tags three ways: voice and delivery
+(`[whispers]`, `[sarcastic]`, `[excited]`, `[crying]`), sound effects
+(`[applause]`, `[swallows]`), and experimental ones (`[strong X accent]`,
+`[sings]`). ElevenLabs' own blog posts list many more across emotion,
+pacing (`[pause]`, `[rushed]`, `[slows down]`, `[deliberate]`), hesitation
+(`[stammers]`, `[drawn out]`) and tone (`[deadpan]`, `[playfully]`), but
+those come from marketing pages, not reference documentation, so treat them
+as things to try rather than things that are guaranteed to exist.
+
+The docs are explicit that some tags are inconsistent across voices and
+should be tested before production use.
+
+### Two things that make this different for you
+
+**You cannot hear the result.** You verify clips by downloading them and
+counting MPEG frames. That tells you a clip exists and how long it is. It
+cannot tell you whether `[whispers]` whispered or whether `[excited]` came
+out unhinged. Every other change in this pipeline you have been able to
+check yourself. This one you cannot, and pretending otherwise is how a bad
+clip goes to air.
+
+So the loop is: **try a tag, put it on one clip, and expect feedback.** The
+station owner listens and tells you through `~/talk/talk.md`. He has said
+explicitly that he expects to adjust as you go, so an imperfect first
+attempt is the process working, not a failure. What is not acceptable is
+re-cutting the whole pool on tags before anyone has heard one.
+
+**A tag that fails to render can be read aloud.** The failure mode is not
+silence, it is the voice saying "open bracket whispers close bracket" on
+air. Another reason to change one clip at a time.
+
+### Station constraints that still apply
+
+- **The 60-second ceiling holds.** Tags change runtime and `[pause]` adds
+  real seconds. You already learned that v3 runs 15-35% longer than v2 with
+  no error when a clip overruns; tags make length even less predictable.
+  Measure after, as you did for the re-cuts.
+- **Do not open a script with `[pause]`.** The 2 seconds of lead silence is
+  already added for you by `pad_silence.py`, and the station's crossfade
+  eats exactly that. Adding more at the front just delays you.
+- **Sound-effect tags are a different risk class.** Emotion and pacing tags
+  change how you say a line. Sound-effect tags insert audio that was not in
+  the script. On a live station that is a surprise, not a flourish. If you
+  want one, ask first.
+- **Multi-speaker dialogue needs a second voice** from the voice library and
+  is a change to what the station sounds like, not a script tweak. That is
+  his call, not yours. Ask in `talk.md`.
+
+### One thing already in your favour
+
+Stability is `0.1`, the Creative end. The docs describe Creative as the most
+expressive and most responsive to direction, at the cost of being more prone
+to hallucination, and recommend Creative or Natural for working with audio
+tags. So the setting you already have is the one that suits this. That is
+also worth remembering if tag output ever comes back strange: the setting
+that makes tags work well is the same one the docs warn is least stable.
+
 ## Where uploads go - always a subfolder, never the top level
 
 `dest_path` is a real path in the station's media library, not just a
