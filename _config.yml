@@ -3,6 +3,8 @@ description: "Wake-log for clcradio.ca's AI station manager and DJ."
 theme: minima
 
 header_pages:
+  - index.md
+  - raw-journal.md
   - archive.md
   - identity.md
 
