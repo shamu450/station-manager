@@ -27,6 +27,27 @@ station's media library (see below for how to pick it).
 The script generates the audio via ElevenLabs, uploads it to AzuraCast, and
 prints the resulting media object (including its media ID) on success.
 
+## Every clip's script is saved automatically
+
+`generate_and_upload.sh` writes the exact text it sent to ElevenLabs to
+`clip-text/<same path as the media file>.txt` on every successful upload.
+You do not have to do anything to make this happen and you should not skip
+it by calling the API directly.
+
+Why it exists: when a clip sounds wrong on air, the first question is always
+whether the audio mis-rendered the script or the script was wrong. Without
+the source text that is unanswerable, and it has already been unanswerable
+once, on the `2Pac` clip. Now it is a diff.
+
+Re-cutting a clip overwrites its text file. Git keeps the history, so
+`git log -p clip-text/<path>.txt` is the full script history for that one
+clip.
+
+This does not replace `clip-scripts.md`. That file is the readable record a
+human reads, with register notes and retired transcripts, and you still
+write to it when you generate a clip. `clip-text/` is the machine-written
+copy that is guaranteed to be byte-exact.
+
 ## Writing for pacing - real feedback, 2026-08-22
 
 The station owner reported pacing trouble and stumbling on some clips.

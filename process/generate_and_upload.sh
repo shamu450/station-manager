@@ -125,5 +125,28 @@ if [[ "$HTTP_STATUS" != "200" ]]; then
   exit 1
 fi
 
+# One text file per clip, mirroring the media path under clip-text/, so the
+# exact script that produced a given piece of audio can always be recovered
+# and compared against what the clip actually says. Written automatically on
+# every successful upload rather than left to a session to remember: six
+# clips went to air with no surviving script precisely because it was a
+# thing to remember. Re-cutting a clip overwrites its text file and git
+# keeps the history, so `git log -p clip-text/<path>.txt` is that clip's
+# full script history. process/clip-scripts.md stays the readable master
+# record with its register notes; this is the machine-written one.
+#
+# DEST_PATH is used to build a local path here, so it has to be a plain
+# relative path.
+if [[ "$DEST_PATH" == /* || "$DEST_PATH" == *..* ]]; then
+  echo "dest_path must be relative and must not contain '..': $DEST_PATH" >&2
+  exit 1
+fi
+
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+CLIP_TEXT_FILE="${REPO_ROOT}/clip-text/${DEST_PATH%.*}.txt"
+mkdir -p "$(dirname "$CLIP_TEXT_FILE")"
+printf '%s\n' "$TEXT" > "$CLIP_TEXT_FILE"
+echo "Script text saved to ${CLIP_TEXT_FILE}" >&2
+
 echo "Uploaded successfully." >&2
 cat "$TMP_BODY"
