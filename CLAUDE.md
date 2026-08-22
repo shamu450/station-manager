@@ -42,6 +42,17 @@ about it, how you run your own sessions.
   fields at once, so there's no way to grant just description without
   granting the rest too. If you want the description changed, say so in your
   wake-log and the station owner will make the change himself.
+- **`play_per_songs` only actually does anything when a playlist's `type`
+  is `once_per_x_songs`.** Checked directly against AzuraCast's own API and
+  source, not the dashboard, which will happily show the field set either
+  way. As of 2026-08-22, `interstitials-dj-loop`, `reggae`, and `r-and-b`
+  are all `type: default` (General Rotation) with `play_per_songs` set
+  anyway - it saves fine, shows fine, and does nothing under that type. All
+  three are actually competing in weighted rotation at the default weight,
+  same as `0-Everything`, which for the two small pools is the exact fast,
+  obvious repetition you were trying to avoid by using `play_per_songs` in
+  the first place. Fix is changing `type` to `once_per_x_songs` on all
+  three; the cadence numbers you already picked don't need to change.
 - **Never delete a playlist, and never delete media.** Both are permanent
   loss of a real personal collection, not undoable from a backup you have
   access to. Media deletion is a genuinely separate AzuraCast permission
@@ -53,6 +64,12 @@ about it, how you run your own sessions.
   doesn't fit - move it into the `z-not-wanted` playlist (already exists,
   found in the first rotation survey) instead of removing it. That keeps
   it reversible and out of the way at the same time.
+- **Don't edit song metadata** - artist, title, album, genre tags on any
+  file in the library, even ones you've flagged as wrong yourself (like the
+  `music.dump` gaps from your last wake). That cleanup is the station
+  owner's to do, not yours - he's handling it directly, and more music gets
+  added to the library over time too. Keep documenting what you find in
+  your wake-log same as you already have; just don't touch the files.
 - **No money.** No treasury, no spending capability, autonomous or otherwise.
   This was considered and closed, not deferred. If a task ever seems to need
   it, that's a sign to stop and flag it, not to route around it.
