@@ -35,7 +35,6 @@ LOG_FILE="$LOG_DIR/wake-${TIMESTAMP}.log"
   echo "=== wake started ${TIMESTAMP} ==="
   claude -p "You have just woken up. Read CLAUDE.md and follow it - it tells you who you are, what you actually have access to, and what to do this session. When you're done, make sure your work is committed and pushed." \
     --model claude-opus-5 \
-    --effort xhigh \
     --add-dir "$HOME/seed-sources" \
     --add-dir "$HOME/.config/station-manager" \
     --permission-mode acceptEdits \
