@@ -29,6 +29,13 @@ much as the API settings:
   pause where you want one - test what actually sounds right rather than
   assuming.
 
+- Spell stylized names phonetically, not as styled. `2Pac` got read with
+  the "2" dropped and "Pac" mispronounced, 2026-08-22 - the model reads
+  literal characters, it doesn't know a digit is standing in for a word.
+  Write `Tupac`, not `2Pac`. Same applies to any other artist name that
+  uses a digit or symbol in place of a word (`50 Cent` -> spell it
+  `Fifty Cent` if it comes up).
+
 Not a solved problem yet - the voice_settings tuning is a starting point,
 not measured against this voice specifically. Listen back and adjust both
 the settings and how you write the next few scripts.
