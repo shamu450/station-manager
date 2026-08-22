@@ -7,9 +7,14 @@ enough to know a topic was used and not enough to avoid repeating a
 sentence, a framing, or a closing line. Write the script here **when you
 generate it**, not later.
 
-The first six were never captured and can't be recovered from text - the
-audio is the only copy. Topic and source are reconstructed from the
-wake-logs; the script column is honestly blank.
+The first six were never captured as text. Three of them (1, 5, 6) were
+since **transcribed by ear by the station owner** and are reproduced below
+under that heading - they are a record of what the audio actually *said*,
+not of what was typed into the generator, so they carry his hearing and his
+typing both. Treat them as evidence, not as source scripts: where one reads
+oddly ("golden ear", "when the records the whole story") that could be a
+mis-generation, a mishearing, or a word lost under the crossfade, and
+there's no way left to tell which. Clips 2, 3 and 4 remain unrecovered.
 
 ## Register notes
 
@@ -25,24 +30,83 @@ Two things worth watching across the pool as it grows:
   deliberately. Check this list before writing, not after.
 - **Length is drifting up.** 24s → 35s → 44s → 59s. The Rascalz clip is the
   longest thing on air and it earned it, but 45 seconds is a better default
-  for something a listener hits every hour. ~12 characters of script per
-  second of audio, measured across clips 7-9.
+  for something a listener hits every hour.
+
+Sizing a script by character count is unreliable - see `tts-pipeline.md`,
+but the short version is that **sentence breaks cost more than characters
+do** under the current settings. Two clips cut the same day came out at 9.4
+and 11.4 characters per second purely on punctuation density.
 
 ## The pool
 
-| # | media | file | len | topic | script |
+Every clip carries **2.0s of silence on each end** (added 2026-08-22, see
+`tts-pipeline.md`), so the `len` column is speech; add 4s for the file
+duration AzuraCast reports.
+
+| # | media | file | speech | topic | script |
 |---|---|---|---|---|---|
-| 1 | 76683 | `station-id-2026-08-21` | 25s | station ID | not captured |
+| 1 | 76683 | `station-id-2026-08-21` | 25s | station ID (**re-cut 2026-08-22**) | below |
 | 2 | 76684 | `trivia-kool-herc-dub-2026-08-22` | 35s | Kool Herc, dub/sound-system roots | not captured |
 | 3 | 76685 | `trivia-rakim-internal-rhyme-2026-08-21` | 35s | Rakim breaking one-rhyme-per-line, via Masta Ace | not captured |
 | 4 | 76686 | `trivia-duke-bootee-the-message-2026-08-21` | 44s | Duke Bootee uncredited on "The Message" | not captured |
-| 5 | 76687 | `trivia-grandmaster-caz-rappers-delight-2026-08-22` | 47s | Caz's rhymes on "Rapper's Delight" | not captured |
-| 6 | 76688 | `station-character-by-the-numbers-2026-08-22` | 45s | rotation stats: 5,555 songs / 1,860 artists | not captured |
+| 5 | 76687 | `trivia-grandmaster-caz-rappers-delight-2026-08-22` | 47s | Caz's rhymes on "Rapper's Delight" | by ear |
+| 6 | 76688 | `station-character-by-the-numbers-2026-08-22` | 45s | rotation stats: 5,555 songs / 1,860 artists | by ear |
 | 7 | 76689 | `trivia-rascalz-juno-refusal-2026-08-22` | 60s | Rascalz refuse the 1998 Juno | below |
 | 8 | 76690 | `trivia-maestro-fresh-wes-1989-2026-08-22` | 44s | "Let Your Backbone Slide," 1989 | below |
 | 9 | 76691 | `station-reggae-lineage-2026-08-22` | 44s | why reggae is in a boom bap rotation | below |
 
 ---
+### 1 — Station ID (media 76683), current version
+
+Re-cut 2026-08-22 to replace the version below. Two reasons: the owner
+flagged the opening as broken audio (that was the crossfade eating the first
+two seconds, now fixed for the whole pool), and his transcript showed two
+lines that read wrong either way — "get out the way when the records the
+whole story" and "golden ear" where "golden era" belongs. Rewritten so
+neither can be ambiguous, and cut once more after the first take ran 38
+seconds.
+
+`C L C` and `dot C A` are spaced deliberately so the model spells them out
+rather than trying to pronounce "clcradio.ca".
+
+> This is C L C Radio dot C A. I'm DJ Loop. Selah behind the scenes. I'm an
+> AI, and I run this station. Dig the crates, hold the history, get out of
+> the way when the record is the whole story. Nineties and two thousands
+> boom bap, the golden era, and the reggae and soul it was built on.
+
+### 1 — Station ID 2026-08-21 (media 76683), retired version
+
+Transcribed by ear by the station owner; `<broken audio>` is his marker for
+the opening. That audio no longer exists — it was overwritten by the re-cut
+above — so this transcript is the only remaining record of it.
+
+> This is <broken audio>  CLC Radio.ca I'm DJ Loop an AI DJ built to run
+> this station. Dig the crates, hold the history and get out the way when
+> the records the whole story. Selah's the name behind the scenes, DJ Loop's
+> the one you hear. 90's and 2000's boom bap, golden ear and the reggae
+> and soul that built it. Let's go.
+
+### 5 — Grandmaster Caz, "Rapper's Delight" (media 76687), transcribed by ear
+> 1979. Big Bank Hank is working a pizza counter in Englewood New Jersey
+> when sugar hill records put him on what becomes the best selling 12"
+> ever pressed. The rhymes aren't his they came out of Grand Matsr Caz's
+> notebook, Cold Crush Brothers South Bronx. Handed over for a session, 
+> nobody thought would matter, Caz got no credit and no money and his
+> name never left the record. I'm the C A S A N O V A and the rest is
+> F L Y Casanova Fly. That's Caz. The whole world saying a man's own
+> name back at him and never knew whose it was. Credit isn't a footnote
+> around here. DJ Loop CLC Radio.
+
+### 6 — Station character by the numbers (media 76688), transcribed by ear
+> This is DJ Loop on CLC Radio, I keep this stations play history.
+> So let me tell you what it actually is. In one recent two week
+> stretch five thousand five hundred and fifty five diffrent songs went
+> out over this signal, eighteen hundred and sixty different
+> artists. Six thousand plays and almost nothing repeated. Commercial
+> radio will run two hundred records into the ground, this is one mans
+> personal collection, deep enough that you can leave it on all day and
+> still get caught off guard. The most played artist in that stretch was
+> Tupac. Of course it was Tupac.
 
 ### 7 — Rascalz refuse the 1998 Juno (media 76689)
 

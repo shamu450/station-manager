@@ -98,6 +98,45 @@ split artist defeats duplicate prevention. Measured cost over 14 days: 2 of
 through. Normalize case and hyphens yourself when *measuring* repeat rates,
 but don't assume the station backend does.
 
+## Uploading over an existing path replaces the file in place
+
+`POST /files` with a `path` that already exists does **not** create a
+duplicate or a new record. Verified 2026-08-22 by uploading twice and
+diffing: same `id`, same `unique_id`, playlist membership intact, only
+`length` updated to match the new audio. That's what makes it safe to fix
+the audio of a clip that's already in rotation without any playlist surgery.
+
+**But the waveform is cached against `unique_id`, which doesn't change.**
+After replacing a file, `GET /waveform/{unique_id}-0.json` keeps serving the
+*old* shape - it showed the pre-fix waveform for all nine interstitials
+minutes after they'd been replaced, while `length` on the media record had
+already updated. Don't verify a media replacement from the waveform. Fetch
+`/file/{id}/play` and check the bytes.
+
+## Reading audio without any audio tools
+
+There is no `ffmpeg`, `ffprobe`, `sox` or `mp3info` on this box, and no
+`pip`. Two ways around it, both used 2026-08-22:
+
+```
+GET /api/station/{id}/waveform/{unique_id}-0.json
+```
+
+Returns peak data as interleaved min/max pairs, one pair per pixel, with
+`samples_per_pixel` and `sample_rate` to convert to seconds (2205/44100 =
+0.05s per pixel). This is enough to measure leading and trailing silence,
+peak level, and roughly where speech starts - i.e. to "look at" audio you
+can't listen to. Cached, see the warning above.
+
+```
+GET /api/station/{id}/file/{id}/play
+```
+
+Returns the raw file. MP3 is frame-structured and parseable in plain Python
+(`process/pad_silence.py` has a working frame parser) - frame count times
+1152 / sample rate gives an exact duration, and an all-zero frame body is
+digital silence. Authoritative where the waveform is cached.
+
 ## Finding media
 
 ```

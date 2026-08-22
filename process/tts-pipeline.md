@@ -5,9 +5,10 @@ holds the full text of everything already on air. **After you generate one:**
 add it there. Six clips went to air before that file existed and their words
 are unrecoverable - the audio is the only copy.
 
-Rough sizing: **~12 characters of script per second of audio**, measured
-across three clips. 45 seconds is a good default; a clip a listener meets
-every hour shouldn't run to a minute without a reason.
+Rough sizing: **9-12 characters of script per second of audio.** That spread
+is not noise, it's punctuation - see the pacing section below. 45 seconds is
+a good default; a clip a listener meets every hour shouldn't run to a minute
+without a reason. Expect to overshoot on the first take and re-cut.
 
 ## Usage
 
@@ -30,10 +31,25 @@ Voice settings got a first tuning pass the same day (see
 `generate_and_upload.sh`), but the script text you write matters just as
 much as the API settings:
 
+- **The two-second dead-air buffer is handled for you now - don't write it
+  into the script.** The station owner asked for one on each end, and he was
+  right about the need, but you can't get it from text: ElevenLabs trims
+  leading and trailing silence, and no amount of ellipsis reliably buys two
+  seconds. `generate_and_upload.sh` now pads the generated MP3 with real
+  silence before uploading (`pad_silence.py`). Why it matters is in that
+  file's docstring; the short version is that the station crossfades at 2.0
+  seconds and was ramping the opening words of every clip up from zero.
 - Write full sentences with real punctuation - periods, commas - not one
   long run-on line. The model uses punctuation as its main pacing cue.
+- **A full stop costs about 1.5-2 seconds of pause**, so short punchy
+  sentences are expensive. Measured 2026-08-22 across two takes of the same
+  station ID: 354 characters over 10 sentences ran 37.8s (9.4 char/s), while
+  285 characters over 6 sentences ran 24.9s (11.4 char/s). Dropping four
+  full stops bought back roughly seven seconds on its own. Budget sentences,
+  not just characters.
 - Break a long thought into two shorter sentences rather than one with
-  three clauses.
+  three clauses - but know from the point above that you're spending real
+  seconds each time you do it.
 - An ellipsis (`...`) or a short standalone sentence works as a deliberate
   pause where you want one - test what actually sounds right rather than
   assuming.
@@ -48,6 +64,24 @@ much as the API settings:
 Not a solved problem yet - the voice_settings tuning is a starting point,
 not measured against this voice specifically. Listen back and adjust both
 the settings and how you write the next few scripts.
+
+## Model: `eleven_v3`, set by the station owner
+
+He switched `generate_and_upload.sh` from `eleven_multilingual_v2` to
+`eleven_v3` and moved `stability` 0.6 -> 0.1 and `style` 0.15 -> 0.25,
+noting "better quality". First actually exercised 2026-08-22 (12th wake) -
+**it works**; the request returns 200 with this key, this voice and a
+stability of 0.1, which was worth confirming rather than assuming since
+some ElevenLabs models constrain stability to discrete values.
+
+Two things measured on that first run, both from one data point each -
+treat as provisional:
+
+- **v3 appears to bill at half rate.** 639 characters generated, 319
+  charged against the monthly budget. If that holds it roughly doubles the
+  effective speech budget.
+- The pacing numbers in the section above were measured under v3 at
+  stability 0.1, so they don't necessarily carry back to the old model.
 
 ## Where uploads go - always a subfolder, never the top level
 

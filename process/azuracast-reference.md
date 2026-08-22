@@ -42,6 +42,44 @@ grouping interstitials/reggae/r-and-b under a group playlist would replace
 some of the current per-playlist cadence tuning with something more direct
 - not decided, flagged for evaluation.
 
+## Crossfade eats the first two seconds of everything
+
+`backend_config.crossfade = 2.0` on this station. Two numbers come out of
+that one setting, and both matter for spoken clips:
+
+- **fade ramp = 2.0s.** The incoming track's volume is ramped up from zero
+  over two seconds.
+- **overlap window = 3.0s**, because `getCrossfadeDuration()` returns
+  `crossfade * 1.5`. The outgoing track is still audible that whole time.
+
+For music this is invisible - songs have intros. For a spoken clip that
+starts talking at t=0 it destroys the opening words, which is exactly what
+the station owner heard on the station ID and marked `<broken audio>`.
+
+**There is no per-file escape hatch.** A media record's `extra_metadata`
+carries `fade_in`, `fade_out`, `cue_in`, `cue_out`, `cross_start_next` and
+`amplify`, and it is tempting to set `fade_in: 0` on a jingle. That does not
+work: in `azuracast.liq`, `live_aware_crossfade_impl` passes
+`settings.azuracast.default_fade()` - the station-wide value - to
+`cross.smart`, `cross.simple` and the plain `add` fallback alike. The
+per-file values feed the separate **autocue** path (`autocue_fade_in`), not
+this one. Changing the station-wide value is out of this role's scope
+anyway.
+
+So the fix is to pad the audio itself. `process/pad_silence.py` does it and
+`generate_and_upload.sh` calls it on every generation.
+
+**All nine clips on air were padded once, on 2026-08-22. Padding is not
+idempotent** - a second bulk pass would give them four seconds a side.
+Check for 77 leading all-zero MP3 frames (2.01s) before padding anything
+that has been in rotation since then.
+
+While confirming the above, `azuracast.handle_jingle_mode` was read
+directly: it replaces a jingle's metadata with the previous track's and does
+nothing else. Independent source-level confirmation of what CLAUDE.md
+already says about `is_jingle` - it is metadata hiding, never cadence and
+never fades.
+
 ## Media management
 
 - A file must be in at least one playlist to ever get played by the
@@ -99,8 +137,16 @@ and compare the Rolling Release Changes section against what's recorded
 below. If it changed, read what's new, fold anything operationally
 relevant into this file, and update the checkpoint.
 
-**Last synced:** 2026-08-22, `AzuraCast/AzuraCast` commit `2cb84e2f`,
-`AzuraCast/azuracast-docs` commit `cff3a3c6`. Rolling Release Changes
-section at that point covered: Grouped/Nested Playlists, Request Queue
-Playlists, Block Requests During Schedule Blocks, Playlist JSON
-Importer/Exporter.
+**Last synced:** 2026-08-22 (12:15 UTC, 12th wake). Rolling Release Changes
+still covers exactly the same four items - Grouped/Nested Playlists, Request
+Queue Playlists, Block Requests During Schedule Blocks, Playlist JSON
+Importer/Exporter - with no additions since the previous check. Most recent
+dated release below it is 0.23.8 (2026-08-09).
+
+Note the docs *site* (`azuracast.com/docs/...`) returns 403 to WebFetch.
+Read the source on `raw.githubusercontent.com` instead - and for anything
+about how the stream is actually assembled, the Liquidsoap scripts under
+`util/docker/stations/liquidsoap/` are more truthful than any prose. The
+repo tree lists via
+`api.github.com/repos/AzuraCast/AzuraCast/git/trees/main?recursive=1`;
+note PHP sources live under `backend/src/`, not `src/`.

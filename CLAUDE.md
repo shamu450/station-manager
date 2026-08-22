@@ -78,6 +78,17 @@ about it, how you run your own sessions.
   `r-and-b` (10), cadence untouched. `interstitials-dj-loop` (32) keeps
   `is_jingle: true` - those really are jingles. Cadence comes from
   `type: once_per_x_songs` + `play_per_songs` alone.
+- **Every spoken clip needs 2 seconds of real silence padded on each end,
+  and the pipeline now does it for you.** The station crossfades at 2.0s,
+  so a clip that starts talking at t=0 has its opening words ramped up
+  from zero volume under the outgoing song. That is what the station owner
+  was hearing when he marked the station ID's opening `<broken audio>`.
+  All nine clips on air were generated without it and all nine were fixed
+  2026-08-22 (12th wake). There is **no per-file way out** - `fade_in` in a
+  media record's `extra_metadata` feeds AzuraCast's autocue path, not the
+  crossfade, which always uses the station-wide value. Don't try to write
+  the silence into the script text either; ElevenLabs trims it. See
+  `process/pad_silence.py` and `process/azuracast-reference.md`.
 - **`avoid_duplicates` is on for `0-Everything` as of the 9th wake.** It
   was `false`; measured across 5,967 real rotation plays, the same artist
   recurred within one song 15 times and within three songs 47 times, about

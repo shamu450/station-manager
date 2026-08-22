@@ -11,6 +11,109 @@ convention, referenced in CLAUDE.md.
 
 ---
 
+**2026-08-22, ~08:00 ET.** Cron, 12:00:51 UTC. Note cron is `0 */6` now, not
+`0 */3`. His call, not mine, not touching it.
+
+**Woke to three files modified by him.** Not mine to have written, and most
+of this session came out of them.
+
+1. He transcribed clips 1/5/6 BY EAR into clip-scripts.md. I'd written last
+wake that those words were unrecoverable, audio is the only copy. Wrong -
+true of the text, not of the information. A person can just listen. I closed
+a door that wasn't locked. Remember that shape.
+2. Model -> eleven_v3, stability 0.6->0.1, style 0.15->0.25. "better quality".
+3. tts-pipeline.md, one line: "Add a two second dead air buffer before your
+text and a two second one after."
+
+(3) looks like a style note. It's a BUG REPORT. Took me a minute.
+
+**crossfade = 2.0.** That's it. That's the whole thing. Ramps incoming
+volume from zero over 2.0s, and overlap is crossfade*1.5 = 3.0s
+(getCrossfadeDuration in StationBackendConfiguration.php). Pulled waveforms
+for all 9 interstitials: EVERY ONE starts speaking within 0.10s at near-full
+amplitude. So every clip I've ever made has had its opening words played at
+~zero volume under the previous song's tail. Since clip 1. Nine wakes.
+His `<broken audio>` marker is on the station ID whose first words are
+"This is C L C Radio". Of course it is.
+
+**No per-file escape.** Tempting: extra_metadata has fade_in/fade_out/
+cross_start_next, set fade_in:0 on the jingles, done. Does nothing.
+azuracast.liq live_aware_crossfade_impl passes
+settings.azuracast.default_fade() (station-wide) into cross.smart,
+cross.simple AND the add fallback. Per-file values feed the *autocue* path
+only. Read the .liq instead of guessing from field names - that habit is
+the one that keeps paying.
+
+Bonus from reading it: handle_jingle_mode just replays previous metadata,
+nothing else. Independent confirmation of the is_jingle lesson from source.
+
+**No ffmpeg/ffprobe/sox/lame/pip on this box.** Two ways round it, both
+already in the API:
+- waveform endpoint `/waveform/{unique_id}-0.json` - min/max pairs, 20px/sec.
+  A way to SEE audio I can't hear. Second time now an endpoint that answers
+  a question I'd been guessing at was there all along (history was the
+  first). Start checking what the API already has BEFORE deciding something
+  is impossible.
+- MP3 frames parse fine in plain python. All-zero frame body = part2_3_length
+  0 = digital silence. Clone the file's own 4-byte header so bitrate/channel
+  mode match by construction. 77 frames = 2.01s.
+Wrote process/pad_silence.py. Dropped the Xing frame on purpose - keeping it
+would leave the file claiming the OLD frame count and AzuraCast would log
+every clip 4s short.
+
+**WAVEFORM LIED.** Re-uploaded all 9, then verified from the waveform and
+got 0.05s lead silence - looked like total failure. It's cached against
+unique_id, and unique_id does NOT change on replace. `length` on the media
+record had already updated. Downloaded all 9 back and counted frames
+instead: 2.01s/2.01s, all nine, ids intact, all still in playlist 32.
+Don't verify a media replacement from the waveform.
+
+**Upload to existing path = in-place replace.** Same id, same unique_id,
+playlists intact, only length updates. Tested it twice in test/ before
+touching a live file. Good - means I can fix audio without playlist surgery.
+
+**Re-cut the station ID.** Padding fixes the entrance, not "golden ear"
+(golden era) or "get out the way when the records the whole story". Can't
+now tell if those were mis-gen, mishear, or lost under the fade - I
+overwrote the audio. Made them unambiguous instead. Asked him which he
+actually heard; that's the bit that tells me if the VOICE has a problem or
+only the crossfade did.
+
+eleven_v3 WORKS, 200, stability 0.1 accepted. Worth confirming not assuming.
+
+**Full stops cost 1.5-2s each.** take 1: 354 chars / 10 sentences = 37.8s
+(9.4 c/s). take 2: 285 chars / 6 sentences = 24.9s (11.4 c/s). Dropped 4
+full stops, bought back ~7s. I'd been sizing at flat ~12 c/s and wondering
+why everything overshot. My own doc says "break into shorter sentences" -
+it has a price tag I never measured.
+
+**v3 bills ~50%.** 639 chars generated, 319 charged. One data point. If real,
+budget is effectively double. 8577/40000.
+
+**reggae/r&b FIRED.** Predicted 08:28 and 09:36 UTC last wake off 17.7
+plays/hr. Actual 08:07 and 09:23. Both within 25 min. Mechanism confirmed.
+Rate means NOTHING yet - 159 plays since the fix, each pool fired exactly
+1x. n=1. 08-24 still the date. Not touching.
+
+TRAP FOR NEXT WAKE: history shows 13 reggae + 3 r&b between 03:34-03:55 UTC.
+Looks like the cadence is broken. It isn't - that's the last 20 min BEFORE
+the 03:57 type fix, reggae still type:default at weight 3, and 11 of 20 gaps
+under 60s = him clicking through the newly-enabled pools. Pre-fix data.
+
+Changelog: unchanged, same 4 items. docs SITE 403s to WebFetch - use
+raw.githubusercontent. PHP is under backend/src/ not src/, cost me a fetch.
+
+Litter: test/pad-check-2026-08-22.mp3 (76692). No playlist, can't air, can't
+delete by rule. Stays.
+
+No regressions 18/32/10/24. Checked after the writes, not before.
+
+Next wake: 08-24 is the reggae/r&b tuning date, should have ~10 fires each by
+then. Ask him about golden ear/golden era if he hasn't said. Clips 2/3/4
+still untranscribed - don't nag, he did three already.
+
+---
+
 **2026-08-22, ~02:00 ET.** Cron wake for once - 06:00:19 UTC, dead on the
 `0 */3`. First one this session that wasn't him kicking it off manually.
 

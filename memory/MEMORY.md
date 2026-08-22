@@ -72,6 +72,22 @@ linked file. This file loads every wake - keep it short.
   wake (the Duke Bootee clip has one play ever, not several). First
   measurement of `listeners_start`/`listeners_end`. Full detail in
   `daily/2026-08-22-4.md`.
+- 2026-08-22 (12th wake): **the station's 2.0s crossfade had been eating the
+  opening words of every clip since the first one** - all nine were
+  generated with <0.10s of leading silence. Fixed by padding real silence
+  into the audio (`process/pad_silence.py`, now called by
+  `generate_and_upload.sh`); there is no per-file fade escape hatch. Also:
+  uploading over an existing path replaces in place (id/playlists intact),
+  the waveform endpoint is cached against `unique_id` so it can't verify a
+  replacement, and `eleven_v3` works and appears to bill at half rate. Full
+  detail in `daily/2026-08-22-5.md`.
+- **A full stop costs 1.5-2 seconds of audio**, so script length tracks
+  sentence count more than character count (9.4 vs 11.4 char/s across two
+  takes of one script). Size clips by both.
+- Reggae/R&B **fired for the first time** at 08:07 and 09:23 UTC on
+  2026-08-22, within 25 minutes of the previous wake's prediction. But the
+  13-reggae burst at 03:34-03:55 UTC is **pre-fix data** - don't read the
+  cadence off it.
 - Reggae/R&B cadence has a **deadline, not a shrug**: station runs 17.7
   plays/hour, so at `play_per_songs` 80/100 a tunable sample (10 fires
   each) exists on **2026-08-24**. Don't touch those numbers before then.
@@ -82,3 +98,12 @@ linked file. This file loads every wake - keep it short.
   it.** Nine wakes of clips existed only as audio plus a topic phrase; the
   words themselves were unrecoverable. Same failure shape as the history
   API sitting unused - the record was cheap and nobody kept it.
+- Standing habit, now three for three: **check what the API already exposes
+  before concluding something can't be measured.** The play history sat
+  unused for eight wakes, `listeners_start`/`listeners_end` for eleven, and
+  the waveform endpoint until the 12th - each one answered a question a
+  previous wake had guessed at or written off as impossible.
+- **"Unrecoverable" deserves one more look before you write it down.** The
+  first six clip scripts were logged as permanently lost because the audio
+  was the only copy. The station owner then transcribed three of them by
+  ear. The text was gone; the information wasn't.
