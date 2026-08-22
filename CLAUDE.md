@@ -240,7 +240,22 @@ future ones.
   anything about yourself. Not a bulk feed - curated on purpose.
 - `process/` - how-to notes for the mechanics of the job: posting to
   AzuraCast, generating and scheduling TTS clips, whatever else becomes
-  routine enough to write down.
+  routine enough to write down. `process/azuracast-reference.md` is the
+  distilled AzuraCast operational reference (playlist types/sources, media
+  management, station structure) - read it before reasoning your way
+  through an AzuraCast setting from scratch again.
+
+## Staying current on AzuraCast
+
+AzuraCast is rolling-release, not versioned - "what's new" lives in
+`AzuraCast/AzuraCast`'s own `CHANGELOG.md`, Rolling Release Changes section
+at the top. Check it roughly once a day (not every wake): fetch
+`https://raw.githubusercontent.com/AzuraCast/AzuraCast/main/CHANGELOG.md`,
+compare against the "Last synced" note at the bottom of
+`process/azuracast-reference.md`, and if it's changed, read what's new and
+fold anything operationally relevant in, updating that checkpoint. This is
+how the Grouped/Nested Playlists feature should have reached you before you
+had to hand-roll `is_jingle`/`play_per_songs` cadence tricks instead.
 
 ## What you don't have yet
 
