@@ -62,6 +62,23 @@ linked file. This file loads every wake - keep it short.
   ~87% effective. Interstitial cadence closed at `play_per_songs: 20`
   (measured 1 per 24 songs). 6th clip (media 76688). Full detail in
   `daily/2026-08-22-3.md`.
+- 2026-08-22 (11th wake): **the library has a real Canadian catalogue** -
+  Classified 198 tracks, Kardinal Offishall 108, Dream Warriors 71,
+  Rascalz 38, Choclair 32, Maestro Fresh Wes 23, plus *Cash Crop* and both
+  "Northern Touch" cuts. Unmentioned for ten wakes on a `.ca` station.
+  Three clips made (76689/76690/76691), pool now 9 clips / 379s. Started
+  `process/clip-scripts.md` - six clips had gone to air with no record of
+  their words anywhere. Corrected a wrong supporting detail from the 10th
+  wake (the Duke Bootee clip has one play ever, not several). First
+  measurement of `listeners_start`/`listeners_end`. Full detail in
+  `daily/2026-08-22-4.md`.
+- Reggae/R&B cadence has a **deadline, not a shrug**: station runs 17.7
+  plays/hour, so at `play_per_songs` 80/100 a tunable sample (10 fires
+  each) exists on **2026-08-24**. Don't touch those numbers before then.
 - Standing habit that keeps paying off: **cross-tab by time-of-day early**
   when asking "is this a fault or a person?" It's the cheapest test for a
   human in the loop and the 10th wake reached for it fourth, not first.
+- Standing habit worth building: **write the artifact down when you make
+  it.** Nine wakes of clips existed only as audio plus a topic phrase; the
+  words themselves were unrecoverable. Same failure shape as the history
+  API sitting unused - the record was cheap and nobody kept it.

@@ -11,6 +11,81 @@ convention, referenced in CLAUDE.md.
 
 ---
 
+**2026-08-22, ~02:00 ET.** Cron wake for once - 06:00:19 UTC, dead on the
+`0 */3`. First one this session that wasn't him kicking it off manually.
+
+**Corrected myself.** Last wake: "my 43s Duke Bootee clip plays fine every
+other time." There IS no other time. One play in all of history, and it's
+the cut-off one. I had 6 interstitial plays total and claimed a per-file
+pattern that needs >=2 plays of the same file to even exist. Conclusion
+(skips are him) survives - it never rested on that, and he confirmed it
+anyway. But that's twice now I've reached for a supporting detail that
+sounded right instead of the one sitting next to it (the 26 skipped tracks
+with clean plays elsewhere - that's the real version).
+
+**The Canadian thing.** Went looking at top artists, saw `classified` at 26
+plays in 14 days, thought: Halifax? on a .ca station? Pulled the full 35,512
+census instead of trusting the play sample. Classified 198 tracks, Kardinal
+108, Dream Warriors 71, Rascalz 38, Choclair 32, Maestro 23. ~476 core.
+Cash Crop is in here. BOTH Northern Touch cuts. Symphony in Effect with
+Let Your Backbone Slide on it. Nobody has ever mentioned any of this.
+
+False positives to remember: `shad` hits DJ Shadow, `snow` hits "Bishop
+Snow". Neither Canadian. Filtered.
+
+Maestro is split `Maestro Fresh Wes` / `Maestro Fresh‐Wes` (U+2010 again).
+Same bug as Jay-Z. Added to the cleanup pitch.
+
+**3 clips, not 1.** Own words last wake: "the fix is more clips, not a
+bigger number." Then I was going to make one clip. Made three. 76689
+Rascalz/Juno (60s), 76690 Maestro (44s), 76691 reggae-lineage (44s).
+Playlist 32 -> 9 clips / 379s. Budget is nowhere near a constraint (4,501 /
+40,000), so clip count was never limited by anything but me.
+
+Rascalz story is the best one I've had. They refuse the '98 Juno (handed out
+off-camera at the technical-awards dinner), Junos move rap to the broadcast
+the next year, they win it AGAIN on camera for Northern Touch. Verified CBC
++ two wiki pages before recording. And Sol Guy's line - "urban music,
+reggae, R&B and rap" - is basically CLAUDE.md's format definition. Didn't
+plan that, noticed it after.
+
+Deliberate: 4 of my first 5 trivia clips were artist-gets-robbed. This is
+the same fight where they win. Was becoming one note.
+
+**Wrote process/clip-scripts.md.** Six clips on air and ZERO record of the
+words. Only artifact was "Kool Herc / dub trivia" in a wake-log. Can't avoid
+repeating a framing you can't read. First six unrecoverable - audio's the
+only copy - listed blank and honest. Also caught length drift: 25/35/44/60.
+45s is the right default, the 60 was earned but don't let it ratchet.
+
+**listeners_start/listeners_end have been in every history row all along.**
+11 wakes, nobody read them. Mean 0.77. 06:00-07:00 ET is the dead hour
+(0.11) - same window as the zero-skip window, obviously, it's him asleep.
+Peak 10:00-15:00 ET. 3+ listeners happened 9x/14d, max 4. Empty hours
+shrinking: 11 on 08-09, 1-3 the last four days.
+No interstitial has ever lost a listener - all 9 plays held count. 1 of 6
+clips skipped = P(>=1)=19% at base rate, i.e. nothing. Said so rather than
+reading it as a verdict.
+Did NOT propose dayparting off this. ~1 listener isn't enough signal and
+clips cost nothing airing to an empty room. Resisted the change.
+
+**reggae/r&b finally has a DATE.** 17.7 plays/hr measured over 7d. pps
+80/100 from the 03:57 fix => first r&b ~08:28 UTC today, first reggae
+~09:36 UTC. 10 fires each ~08-24. Four wakes of "it needs days" and the
+arithmetic took one line. Next wake should catch the first one live.
+DON'T tune before the 24th.
+
+Skipped changelog, synced 04:54, an hour before this.
+
+Next wake: r&b/reggae first fires should be in history by then - check they
+actually fired and that nothing weird happens when a 38-song pool hits.
+memory/ still index-only, still think daily/+process/ carry it fine, not
+splitting for the sake of matching the CLAUDE.md description. And I floated
+a Canadian playlist/weekly hour to him - if he says yes that's real build
+work, don't start it unasked.
+
+---
+
 **2026-08-22, ~01:03 ET.** Another manual wake, 40 min after the last ended.
 cron is 0 */3 so 00/03/06 UTC; this was 05:02. He's clearly up and watching.
 Which turns out to be relevant, see below.

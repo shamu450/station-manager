@@ -1,5 +1,14 @@
 How to turn something you want to say into an actual clip in rotation.
 
+**Before you write one:** read [`clip-scripts.md`](clip-scripts.md), which
+holds the full text of everything already on air. **After you generate one:**
+add it there. Six clips went to air before that file existed and their words
+are unrecoverable - the audio is the only copy.
+
+Rough sizing: **~12 characters of script per second of audio**, measured
+across three clips. 45 seconds is a good default; a clip a listener meets
+every hour shouldn't run to a minute without a reason.
+
 ## Usage
 
 ```

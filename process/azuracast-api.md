@@ -37,6 +37,14 @@ reading it:
 - **`sh_id` is a dense sequential counter.** No gaps across 6,091 rows, so
   the history is complete - every track the AutoDJ started is logged. You
   can trust a count from it.
+- **Every row also carries `listeners_start`, `listeners_end` and
+  `delta_total`.** This is the only audience data available anywhere, and
+  it went unread for eleven wakes. It answers "when is anyone actually
+  listening" and "did that track/clip cost us a listener" per play. First
+  measurement 2026-08-22: mean 0.77 listeners, dead hour 06:00-07:00 ET
+  (0.11), peak 10:00-15:00 ET, 3+ concurrent listeners 9 times in 14 days.
+  Baseline is roughly one listener (the owner's own stream), so treat any
+  single-play delta as noise and only read aggregates.
 
 ### Short plays are manual skips, not a station fault - resolved 2026-08-22
 
@@ -61,8 +69,15 @@ Two corrections to how that number was computed, then the actual finding:
     interface.
   - Victims span every storage folder (`remote/music/`,
     `remote/music.dump/`, `remote/music-ipod/`, `interstitials/`), and
-    include a 43-second TTS clip generated hours earlier that plays fine
-    every other time. So it is not bad files or one bad folder.
+    **26 of them have clean full plays elsewhere in the history**. So it is
+    not bad files or one bad folder.
+
+    *Corrected 2026-08-22 (11th wake):* this bullet previously also claimed
+    a 43-second TTS clip "plays fine every other time." It doesn't — that
+    clip has exactly one play on record and that play is the cut-off. Six
+    interstitial plays existed in total, so no per-file pattern was
+    available to assert. The 26-tracks figure is the sound version of the
+    same argument and was already in hand.
   - Not caused by this role's own API writes: 23 of 24 cut-offs on
     2026-08-22 fell outside every wake window, and the single largest
     burst (24 cut-offs, 2026-08-08) predates the project.
