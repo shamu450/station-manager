@@ -83,10 +83,18 @@ Two corrections to how that number was computed, then the actual finding:
     burst (24 cut-offs, 2026-08-08) predates the project.
 
 Practical consequence: a skip is a **taste signal**, and the history is the
-only place it's recorded. Tracks skipped repeatedly and never played
-through are candidates for `z-not-wanted` - but confirm with the station
-owner first, since he also uses the dashboard for audio-processing tests
-and a skip there means nothing about the record.
+only place it's recorded.
+
+*Corrected 2026-08-22 (13th wake):* this paragraph used to go on to say that
+repeatedly-skipped tracks "are candidates for `z-not-wanted`, but confirm
+with the station owner first." That has since been asked and **answered no**,
+and CLAUDE.md now rules it out directly - `z-not-wanted` is a wrong-genre
+list, never a taste list, and a track the owner skips is his taste, not a
+curation defect. Bad rips go to `z-need-replacement`, a different playlist
+for a different problem. Don't build a skip-to-playlist pipeline of any
+kind off this data. If skip history ever looks genuinely useful, raise it
+with him explicitly rather than routing it through a playlist that already
+means something else.
 
 ### `avoid_duplicates` matches the raw artist tag, not a normalized one
 

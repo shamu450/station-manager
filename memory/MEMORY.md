@@ -81,9 +81,30 @@ linked file. This file loads every wake - keep it short.
   the waveform endpoint is cached against `unique_id` so it can't verify a
   replacement, and `eleven_v3` works and appears to bill at half rate. Full
   detail in `daily/2026-08-22-5.md`.
-- **A full stop costs 1.5-2 seconds of audio**, so script length tracks
-  sentence count more than character count (9.4 vs 11.4 char/s across two
-  takes of one script). Size clips by both.
+- 2026-08-22 (13th wake): **re-cut all 8 remaining clips onto `eleven_v3`**
+  at the owner's request (the 12th wake had padded them but only re-cut the
+  station ID - padding is not regenerating). He transcribed clips 2/3/4 by
+  ear, so **every clip on air now has a real script written down**. Killed
+  the sentence-pause pacing model, confirmed half-rate billing, and found
+  that v3 runs 15-35% longer than the old model. Full detail in
+  `daily/2026-08-22-6.md`.
+- ~~A full stop costs 1.5-2 seconds of audio~~ - **retired 13th wake.** That
+  was a two-point fit to two takes of one script, and it under-predicted the
+  next clip by 25%. Across 14 takes v3 delivery is **8.86-11.73 char/s**
+  (mean 10.23) and one re-cut 74 characters *shorter* came back 2.3 seconds
+  *longer*. **Duration is not predictable from a script.** Size at ~9
+  char/s, generate, measure, re-cut. Two or three takes is normal.
+- **A model swap silently changes runtime, and nothing errors.** Same
+  script on `eleven_v3` vs `multilingual_v2`: +33% and +15% on the two
+  clips that make a controlled pair. Three clips drifted past 60s before
+  anyone measured. After any model change, re-measure the whole pool.
+- **v3 bills at exactly half rate** - confirmed twice (639→319, 498→249).
+  Effective budget ~80,000 char/month. Re-takes are cheap; stop treating
+  them as waste.
+- **Don't bake a countable number into evergreen audio.** R&B 244→248 and
+  Maestro 23→24 both went stale inside a week because the owner keeps
+  adding music. Use "a couple hundred" / "two dozen", or a measured window
+  ("in one recent two week stretch"), unless you'll re-cut it.
 - Reggae/R&B **fired for the first time** at 08:07 and 09:23 UTC on
   2026-08-22, within 25 minutes of the previous wake's prediction. But the
   13-reggae burst at 03:34-03:55 UTC is **pre-fix data** - don't read the
@@ -106,4 +127,14 @@ linked file. This file loads every wake - keep it short.
 - **"Unrecoverable" deserves one more look before you write it down.** The
   first six clip scripts were logged as permanently lost because the audio
   was the only copy. The station owner then transcribed three of them by
-  ear. The text was gone; the information wasn't.
+  ear, and the other three the wake after. All six came back. The text was
+  gone; the information wasn't.
+- **Check `git diff` at the start of every wake.** Twice now the owner has
+  left the actual job as an uncommitted edit in the working tree - a request
+  in a shell-script comment, transcripts pasted into a doc - rather than in
+  any channel that announces itself. The 13th wake was a manual trigger 20
+  minutes after he saved.
+- **Docs drift against each other.** `azuracast-api.md` still told a future
+  wake to route skipped tracks into `z-not-wanted` long after CLAUDE.md
+  forbade exactly that. When CLAUDE.md gains a rule, grep `process/` for the
+  practice it now rules out.

@@ -61,7 +61,12 @@ echo "Generating speech via ElevenLabs (voice ${VOICE_ID})..." >&2
 # voice_settings tuned 2026-08-22 for pacing/stumbling (previously unset,
 # running on account defaults). Starting point, not measured against this
 # voice yet - adjust by ear.
-## tuned by human - cnahed to eleven_v3 for better quality, changed stability
+## tuned by human - changed to eleven_v3 for better quality, changed stability
+### please reprocess old clips with the new v3 model for newer better quality on air clips
+# ^ done 2026-08-22 (13th wake): all 9 clips in rotation are v3 now. Note v3
+# runs 15-35% longer than multilingual_v2 for the same script and its length
+# is not predictable from character count - see tts-pipeline.md before
+# porting any old script over. It bills at exactly half rate (confirmed).
 python3 -c '
 import json, sys
 json.dump({

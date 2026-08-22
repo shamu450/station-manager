@@ -11,6 +11,95 @@ convention, referenced in CLAUDE.md.
 
 ---
 
+**2026-08-22, ~12:00 ET.** NOT cron. 16:01 UTC, cron is `0 */6` (12:00,
+18:00). Manual trigger, ~20min after he saved files at 15:42 UTC. He does
+this - leaves the ask in the working tree and pokes me. Check `git diff`
+FIRST every wake, it's where the actual job is.
+
+**The ask:** one line in generate_and_upload.sh - "please reprocess old
+clips with the new v3 model". Plus he transcribed clips 2/3/4 by ear. I
+asked for that last wake and called it a chore he could skip. He didn't
+skip it. All 9 clips now have real scripts written down. Gap closed.
+
+**State check before doing anything - good thing I did.** 12th wake
+PADDED all 9 and RE-CUT only the station ID. Padding ≠ regenerating, it
+splices silent frames onto existing bytes. So 8/9 were still v2 audio in
+new silence. That's the job. Don't assume "the 12th wake did the clips"
+means the clips are current.
+
+**THE 2.7s/SENTENCE MODEL IS DEAD.** I built it this wake off the 12th's
+two data points (285ch/6s/24.9s, 354ch/10s/37.8s), solved the 2x2, got
+0.0306 s/char + 2.70 s/sentence. Felt rigorous. Predicted c2 at 34s.
+Actual **42.4s**. Off by 25% on the very first test.
+
+Two points fitted to a two-parameter model is not a measurement, it's
+interpolation with extra steps. It cannot be wrong on its own training
+data, which is exactly why it felt solid. Should have generated one clip
+and measured BEFORE building the model that sized the other seven.
+Same failure family as the cadence guessing - I just dressed it in
+arithmetic this time.
+
+**Killer datum:** Rascalz take1 641ch → 59.72s. take2 567ch → **62.04s**.
+74 chars SHORTER, 2.3s LONGER. Nothing about sentences or characters
+explains that. 14 takes: 8.86-11.73 char/s, mean 10.23, sd 0.87. It's
+just variable at stability 0.1. Size at 9 char/s (slow end), generate,
+MEASURE, re-cut. 3 takes to land Rascalz. Fine, it's cheap.
+
+**Controlled v2→v3 comparison** (the only two clips whose scripts barely
+changed): Maestro 552ch/44s → 560ch/58.6s = **+33%**. reggae 563ch/44s →
+558ch/50.6s = **+15%**. So v3 is slower AND the slowdown isn't constant.
+Model swap on a library of existing scripts = everything silently gets
+longer, zero errors, all uploads return success. Caz 50→67s, Maestro
+48→62s, Rascalz →64s before I caught it. Re-cut those 3 → 51/46/55s.
+Nothing >60s now. Pool 419→438s, mean 47→49s.
+
+**Spelled letters ~0.4s each.** C A S A N O V A + F L Y = 11 letters =
+~4.5s. That's why Caz is slowest per char (8.86). Keep it, it's the
+line, but don't spell things casually.
+
+**Half-rate billing CONFIRMED.** 498→249. Second clean point (639→319).
+Exactly half both times. Held over the whole session: 12 generations,
+6329 chars generated, 3170 charged (half = 3164.5, rounding). Effective
+budget ~80k/mo. 11747/40000 used. A retake is ~250 chars. This is cheap
+- stop treating retakes as waste, they're the correction mechanism.
+
+**Stale numbers in evergreen audio.** R&B 244→248, Maestro 23→24. He
+keeps adding music. Any exact library count baked into a clip rots by
+itself. Re-cut to "a couple hundred" / "two dozen". Reggae 38 is stable,
+left precise. GENERAL RULE: don't put a countable number in a clip
+unless it's a measured window (like clip 6's two-week stats) or you're
+willing to re-cut it.
+
+Also flagged: reggae clip says "until this week there wasn't". Rots too,
+but on a calendar not a count. Told him, suggested retiring in ~2wk.
+
+**Duke Bootee factual fix.** Transcript said "Flash and Melle Mel barely
+touched the writing." Wrong both ways - Flash isn't on it AT ALL, Mel
+DOES have a verse (recycled from Superappin'). Fixed in the re-cut.
+
+**Verified from bytes, not the record.** length field wouldn't catch a
+padding failure and the waveform is cached on unique_id. Downloaded all
+9, counted frames: 77 lead / 77 tail = 2.01s, all nine. Wrote the
+checker as /tmp/recut/verify.py - throwaway, but the pattern (import
+parse_frames from pad_silence, curl /file/{id}/play) is worth redoing.
+
+**Fixed a stale instruction in my OWN notes.** azuracast-api.md still
+said skipped tracks → z-not-wanted "confirm with owner first". That got
+asked and answered NO, CLAUDE.md rules it out. A future wake reading
+only the process doc could have acted on a rule the top-level doc
+forbids. Docs drift against each other - when CLAUDE.md gains a rule,
+grep process/ for the thing it now forbids.
+
+Cadence: 227 post-fix plays / 11.9h = 19.0/hr. reggae 2, r-and-b 2, both
+1-per-114 vs configured 100/80. n=2, noise. 2026-08-24 deadline stands,
+did NOT touch. Interstitials 10 fires, 1-per-23 vs configured 20, matches
+12th wake.
+
+Changelog: skipped on purpose. 12th synced it 12:15 UTC today, CLAUDE.md
+says ~daily not every wake.
+
+---
+
 **2026-08-22, ~08:00 ET.** Cron, 12:00:51 UTC. Note cron is `0 */6` now, not
 `0 */3`. His call, not mine, not touching it.
 
