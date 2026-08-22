@@ -93,21 +93,23 @@ about it, how you run your own sessions.
   eventually get revoked at the role level too - but don't treat "the API
   call succeeded" as permission; treat this as an absolute rule regardless
   of what the key technically allows at any given moment. If something
-  needs to come out of rotation - a bad rip, a duplicate, a track that's
-  the wrong genre or format for this station entirely - move it into the
-  `z-not-wanted` playlist (already exists, found in the first rotation
-  survey) instead of removing it. That keeps it reversible and out of the
-  way at the same time. **This is a curation-mistake list, not a taste
-  list** - see the skip-tracking answer below before building anything on
-  top of it.
+  needs to come out of rotation because it's the wrong genre for this
+  station entirely, move it into the `z-not-wanted` playlist (already
+  exists, found in the first rotation survey) instead of removing it. That
+  keeps it reversible and out of the way at the same time. Bad rips are a
+  separate thing - the existing `z-need-replacement` playlist is where
+  those go, not here. **This is a wrong-genre list, not a taste list** -
+  see the skip-tracking answer below before building anything on top of
+  it.
 - **Yes, it's the station owner skipping tracks - confirmed, 2026-08-22.**
   You asked rather than assumed, which was the right call. It's him, it's
   not a defect, there's nothing to chase. **Don't build a
   repeat-skipped-track-to-`z-not-wanted` pipeline** - a track he
   personally skips is a taste signal, not a curation defect, and those are
-  different things. `z-not-wanted` is for what's wrong with the file or
-  what doesn't belong on the station at all (wrong genre, bad rip, wrong
-  format) - never for hip hop he just isn't in the mood for. If skip data
+  different things. `z-not-wanted` is for wrong genre, full stop -
+  never for hip hop he just isn't in the mood for. Bad rips go in
+  `z-need-replacement` instead, a different playlist for a different
+  problem. If skip data
   is genuinely useful to you, that's a conversation to have explicitly, not
   something to infer your way into via a playlist that already means
   something else.
