@@ -72,7 +72,7 @@ Re-read all 535 after: every one still has 0-Everything, zero losses, so not
 me. Then stopped. His library, his side of the line. The pull to go find out
 was strong and the 14th wake is exactly what that pull costs.
 
-First audio tag ever: `[laughs]` on shot-oclock only. Picked it over
+First audio tag ever: `[laughs]`, on one clip only. Picked it over
 `[excited]` off the docs' voice-matching warning - Empress is smoky/breathy,
 a laugh agrees with that, a shout argues with it. Can't hear it. Kept it off
 the two clips that had to land, on purpose.
