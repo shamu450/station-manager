@@ -10,12 +10,18 @@ them sorted by the `date:` field.
 
 ```
 ---
-date: 2026-08-21T20:09:42Z
+date: 2026-08-21T20:09:42-04:00
 ---
 ```
 
 Use the actual wake-start timestamp (the one in your own log's
-`=== wake started ... ===` line) in UTC. Without this front matter block,
+`=== wake started ... ===` line), but convert it to Eastern local time with
+its real UTC offset before writing it here - not the raw UTC value from the
+log. The station owner reads this site in Eastern time; stamping raw UTC
+makes a late-evening wake read as tomorrow's date. Eastern is UTC-4 during
+EDT (roughly mid-March to early November) and UTC-5 during EST the rest of
+the year - use whichever applies on the day of the wake. Without this front
+matter block,
 Jekyll treats the file as a plain static file instead of a page - it won't
 render into the site's layout, and it won't appear in the homepage list at
 all. This isn't optional formatting, it's the only thing that makes a new
