@@ -11,6 +11,85 @@ convention, referenced in CLAUDE.md.
 
 ---
 
+**2026-08-22, ~00:10 ET.** Wake fired 13 min after the last one ended - not
+cron (`0 */3`), manual. wake.sh commit right before it switched model
+Sonnet 5 -> Opus. So: first Opus wake, kicked off to watch it.
+
+curl needs `-k`. AzuraCast is on an internal self-signed cert
+(10.10.30.104) and plain curl just returns nothing - exit 60, empty body,
+looks like an API failure if you pipe straight into json.load. Cost me two
+calls. It's documented in generate_and_upload.sh's header comment, which I
+hadn't read yet. Read the process scripts first next time.
+
+Big one: **I broke reggae/r-and-b two wakes ago with is_jingle.** Went in
+thinking is_jingle + play_per_songs were one technique for "play rarely."
+They're not. play_per_songs (under type: once_per_x_songs) does cadence;
+is_jingle = "Hide Metadata from Listeners", it stops titles reaching the
+player. Verified via search + AzuraCast issue #4774 (exact symptom: player
+shows previous song's metadata through the whole jingle track), not from
+memory. So ~a day of reggae/R&B aired under the wrong song title. Set
+is_jingle=false on 24 and 10. Kept it true on 32 - real jingles, correct
+there. Cadence untouched, it never depended on the flag.
+
+Also `avoid_duplicates` was FALSE on 0-Everything. Measured before touching:
+15 same-artist-within-1-song in 5,967 rotation plays, 47 within 3. ~1/day.
+Backend already has duplicate_prevention_time_range=1440. Turned it on.
+Measured first this time instead of guessing a number - trying to break the
+habit of the last three wakes.
+
+All 3 PUTs verified by diffing full before/after objects, not just the 200.
+Only the intended field moved on each. Station stayed up, 1 listener,
+no skip on the current track this time.
+
+**History API works and nobody had used it**: `/api/station/1/history`,
+6,068 plays back to 08-08. Everything below came out of it.
+- type-bug diagnosis CONFIRMED: 23:34-23:55 on 08-21, reggae/r-and-b took
+  13 of 16 consecutive slots. That's the back-to-back the owner heard.
+- 100/80 cadence still unverified. Fix landed 14 min before this wake. Not
+  enough playback, full stop. Open for a boring reason now, at least.
+- Spider Loc "Blutiful World" 33 plays / 14 days mystery: it's REQUESTS.
+  All 68 blank-playlist rows == is_request, 31 of them are that Spider Loc
+  triplet + Horseshoe Gang on a schedule. All in `0-tester-for-stereo-tools`.
+  Owner's stereo tool test loop. Left alone. But it IS going out live ~2x/day,
+  told him.
+- 4.1% of all plays get cut off <30s. Chronic, spread across all 14 days,
+  predates me. NOT caused by my playlist writes - checked wake windows
+  against the log timestamps in ~/station-manager-logs. Unexplained, low
+  priority, noted.
+
+**Unblocked the media API** the 8th wake gave up on:
+`GET /files?searchPhrase=` (not `/files/list`, which is disk browsing).
+And `/playlist/{id}/export-config` dumps every media record with
+artist/title/album/genre - full census, no sampling. Dump paths are
+`remote/music.dump/` and `remote/music-ipod/`, which is why
+"00-music-ipod-dump" never matched anything.
+
+**Corrected my own earlier number.** 7th wake said dvd-dump was 16% blank
+artist / 53% blank album from a 223-file sample. Full census: 11% / 10%.
+The 53% was sampling loose top-level files = least-tagged ones in the
+folder. Bad sample. And ipod-dump is CLEAN (1% artist, 4% album) - been
+carried as unknown risk for 2 wakes for nothing. Closed.
+
+z- leak check: thought disabled z- playlists wouldn't stop tracks that are
+also in a 00- playlist. Mostly wrong - 7 leaks out of 3,556. Curation is
+tight. 4 are z-need-replacement (real bad rips, airing). Flagged to owner
+with media ids rather than editing his 00- playlists myself.
+
+Clip #5: Grandmaster Caz / Big Bank Hank / Rapper's Delight, the
+C-A-S-A-N-O-V-A line still sitting in the record Hank got paid for. Checked
+the lyric against outside sources before airing it - seed notes said Caz
+handed the book to "a stranger," but Hank was actually his manager, so I
+phrased around that rather than repeat it. media 76687, 46s. Playlist 32
+= 5 clips / 185s.
+
+Next wake: reggae/r-and-b cadence still needs real playback - give it days,
+not hours. Also nobody has checked whether the *interstitial* cadence
+(every 20) actually feels right; 5 clips now so it's finally worth asking.
+And the 4.1% truncation thing deserves a real look if it's ever the biggest
+thing left.
+
+---
+
 **2026-08-21, ~23:56 ET.** Fixed the type: default bug for real this time -
 checked all 3 playlists via API first (confirmed: yes, still type=default,
 play_per_songs set but inert), then PUT type=once_per_x_songs on

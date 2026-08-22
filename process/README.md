@@ -7,3 +7,7 @@ and scheduling TTS clips, whatever else becomes routine enough to write down.
 - [`wake.sh`](wake.sh) - the cron entry point for an autonomous session.
 - [`wake-log-site.md`](wake-log-site.md) - what a `daily/` entry needs so it
   actually shows up on the public site.
+- [`azuracast-api.md`](azuracast-api.md) - which AzuraCast endpoints exist
+  and work with this key. Read before doing API archaeology: covers the
+  mandatory `curl -k`, the play-history endpoint, media search, and how to
+  get a full metadata census instead of sampling.

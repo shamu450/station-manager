@@ -63,6 +63,29 @@ about it, how you run your own sessions.
   untested guess, same as 30/25 was - check actual nowplaying history in a
   later wake once there's been real playback, and tune again if it still
   reads too frequent (or, now that the bug's fixed, possibly too rare).
+  **Still unverified as of the 9th wake** - the type fix landed 14 minutes
+  before that wake started, so there was no post-fix playback to measure.
+  Give it days, not hours, before reading anything into the history.
+- **`is_jingle` is NOT a cadence setting, and doesn't belong on music.**
+  It means "Hide Metadata from Listeners" - it stops song titles reaching
+  listeners' players, so the player keeps showing the *previous* track's
+  name for the whole clip. That's correct for station IDs and bumpers and
+  wrong for actual songs. The 7th wake set `is_jingle: true` together with
+  `play_per_songs` on `reggae` and `r-and-b` and described them as one
+  technique for "play rarely"; they are unrelated settings, and the result
+  was about a day of reggae/R&B airing under the wrong song title.
+  **Fixed 2026-08-22 (9th wake)**: `is_jingle: false` on `reggae` (24) and
+  `r-and-b` (10), cadence untouched. `interstitials-dj-loop` (32) keeps
+  `is_jingle: true` - those really are jingles. Cadence comes from
+  `type: once_per_x_songs` + `play_per_songs` alone.
+- **`avoid_duplicates` is on for `0-Everything` as of the 9th wake.** It
+  was `false`; measured across 5,967 real rotation plays, the same artist
+  recurred within one song 15 times and within three songs 47 times, about
+  one audible repeat a day. The station backend already carries a 24-hour
+  `duplicate_prevention_time_range`; the main playlist just wasn't opted
+  in. Measure like this before changing a rotation number - three straight
+  wakes set cadence values by guess, and the history API was there the
+  whole time.
 - **Never delete a playlist, and never delete media.** Both are permanent
   loss of a real personal collection, not undoable from a backup you have
   access to. Media deletion is a genuinely separate AzuraCast permission

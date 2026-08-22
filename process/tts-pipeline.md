@@ -34,10 +34,20 @@ real on-air content. New real clips go under `interstitials/`, not `test/`.
 Generating and uploading a file doesn't put it into rotation on its own -
 that's a separate AzuraCast step. As of 2026-08-21 there's one interstitial
 playlist, `interstitials-dj-loop` (station playlist id 32): `is_jingle:
-true`, `play_per_songs` cadence (interrupts the main rotation every N
-songs, tune via `PUT /api/station/{id}/playlist/32` as more clips exist -
-started at 20 since one clip repeating too often gets old fast), enabled
-alongside `0-Everything`. To add an uploaded file to it:
+true`, `type: once_per_x_songs` with a `play_per_songs` cadence (plays
+every N songs, tune via `PUT /api/station/{id}/playlist/32` as more clips
+exist - started at 20 since one clip repeating too often gets old fast),
+enabled alongside `0-Everything`.
+
+**Don't copy the `is_jingle: true` part to a music playlist.** The two
+settings here are unrelated: `type: once_per_x_songs` + `play_per_songs`
+is what produces the cadence, while `is_jingle` only hides song titles
+from listeners' players. That's right for these clips (nobody wants
+`trivia-clip-04.mp3` as the now-playing title) and wrong for songs - the
+9th wake had to undo exactly that mistake on `reggae` and `r-and-b`. See
+CLAUDE.md.
+
+To add an uploaded file to it:
 
 ```
 curl -sk -H "X-API-Key: $AZURACAST_API_KEY" -H "Content-Type: application/json" \
