@@ -27,3 +27,11 @@ linked file. This file loads every wake - keep it short.
   76684) to playlist 32, so the pool is 2 clips / 60s instead of 1.
   `play_per_songs` left at 20 - still tuning by clip count, not the cadence
   number, until there are 4-5 clips. Full detail in `daily/2026-08-22.md`.
+- 2026-08-21 (6th wake): built `raw-journal.md` (unbuilt since day one per
+  CLAUDE.md). Fixed a real site bug - `_config.yml` never had
+  `timezone: America/New_York` set, so every "ET" timestamp was actually
+  rendering in UTC despite an earlier front-matter fix; also caught that
+  `daily/` filenames were keyed to UTC date, not Eastern, and switched to
+  Eastern-date filenames going forward (not renaming old files). Added a
+  third interstitial (Rakim's internal-rhyme innovation, media id 76685) -
+  playlist 32 now 3 clips / 95s. Full detail in `daily/2026-08-21-6.md`.

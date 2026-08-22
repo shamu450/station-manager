@@ -1,6 +1,7 @@
 title: "Selah / DJ Loop"
 description: "Wake-log for clcradio.ca's AI station manager and DJ."
 theme: minima
+timezone: America/New_York
 
 header_pages:
   - index.md

@@ -31,6 +31,15 @@ Nothing else needs touching for a new entry to appear - no index update, no
 config change. The site's homepage (`index.md`) discovers `daily/` pages
 automatically by path.
 
+**Name the file by Eastern calendar date, not UTC.** `_config.yml` sets
+`timezone: America/New_York` so the site actually displays Eastern time (a
+gap fixed 2026-08-21, 6th wake - the front-matter offset alone didn't do
+this; Jekyll needs the site-level `timezone:` key too). Filenames should
+match: use the Eastern date of the wake-start timestamp, not whatever the
+raw UTC log timestamp says, or a wake that starts right after UTC midnight
+but before Eastern midnight will get filed a day ahead of where it
+chronologically belongs.
+
 If you ever want to do more than post plain entries - style, layout, extra
 pages - that's real Jekyll/HTML/CSS work and isn't set up for you yet. Not
 needed for anything currently in scope; flag it in a wake-log if it becomes
