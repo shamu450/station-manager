@@ -43,12 +43,21 @@ TMP_UPLOAD_PAYLOAD="$(mktemp)"
 trap 'rm -f "$TMP_AUDIO" "$TMP_BODY" "$TMP_TTS_PAYLOAD" "$TMP_UPLOAD_PAYLOAD"' EXIT
 
 echo "Generating speech via ElevenLabs (voice ${VOICE_ID})..." >&2
+# voice_settings tuned 2026-08-22 for pacing/stumbling (previously unset,
+# running on account defaults). Starting point, not measured against this
+# voice yet - adjust by ear.
 python3 -c '
 import json, sys
 json.dump({
     "text": sys.stdin.read(),
     "model_id": "eleven_multilingual_v2",
     "output_format": "mp3_44100_128",
+    "voice_settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "style": 0.15,
+        "use_speaker_boost": True,
+    },
 }, sys.stdout)
 ' <<<"$TEXT" > "$TMP_TTS_PAYLOAD"
 

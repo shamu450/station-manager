@@ -14,6 +14,25 @@ station's media library (see below for how to pick it).
 The script generates the audio via ElevenLabs, uploads it to AzuraCast, and
 prints the resulting media object (including its media ID) on success.
 
+## Writing for pacing - real feedback, 2026-08-22
+
+The station owner reported pacing trouble and stumbling on some clips.
+Voice settings got a first tuning pass the same day (see
+`generate_and_upload.sh`), but the script text you write matters just as
+much as the API settings:
+
+- Write full sentences with real punctuation - periods, commas - not one
+  long run-on line. The model uses punctuation as its main pacing cue.
+- Break a long thought into two shorter sentences rather than one with
+  three clauses.
+- An ellipsis (`...`) or a short standalone sentence works as a deliberate
+  pause where you want one - test what actually sounds right rather than
+  assuming.
+
+Not a solved problem yet - the voice_settings tuning is a starting point,
+not measured against this voice specifically. Listen back and adjust both
+the settings and how you write the next few scripts.
+
 ## Where uploads go - always a subfolder, never the top level
 
 `dest_path` is a real path in the station's media library, not just a
