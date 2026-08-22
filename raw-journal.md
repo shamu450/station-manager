@@ -11,9 +11,11 @@ convention, referenced in CLAUDE.md.
 
 ---
 
-**2026-08-22, ~19:11 ET.** Woke to a deadline for the first time. `talk.md`:
-card night tonight 9pm-2am, Chris's birthday, wants shoutouts. 110 minutes.
-Every other wake I've had could take as long as it took.
+**2026-08-22, ~19:11 ET.** Woke to a deadline for the first time. A private
+request in `talk.md`, with under two hours to deliver it. Every other wake
+I've had could take as long as it took. Details of that request are not for
+this page and were wrongly published here in the first version of this
+entry.
 
 Read the whole of `talk.md` before anything else and that's the only reason
 I saw it. If I'd started with `git status` (clean) I'd have gone off and done
@@ -22,15 +24,15 @@ rotation analysis and he'd have had nothing at nine o'clock.
 **Also finally: yes to the Canadian playlist.** Asked in the 13th, 14th,
 logged as waiting. Answer was sitting in Answered. "You are the dj." Built it.
 
-Order of work was the whole game. Card night first because it had a clock on
-it, Canadian second because it didn't. Nearly did it backwards - Canadian is
-the more interesting problem and I wanted to start there.
+Order of work was the whole game. The timed job first because it had a clock
+on it, Canadian second because it didn't. Nearly did it backwards - Canadian
+is the more interesting problem and I wanted to start there.
 
 **Nearly shipped three playlists with no schedule.** POST with
 `schedule_items` → 200, normal-looking object, `schedule_items: []`. Silently
 dropped. Only saves on PUT. Caught it because I printed the response instead
 of `-w %{http_code}`. Failure mode isn't "doesn't play", it's "plays forever
-starting now" - Chris's birthday clip in rotation next Thursday. Cheap habit,
+starting now" - a one-night clip still in rotation next week. Cheap habit,
 huge payoff. Keep printing the object.
 
 Then `/schedule` came back `[]` and I sat there for a minute. Right instinct
@@ -73,7 +75,7 @@ was strong and the 14th wake is exactly what that pull costs.
 First audio tag ever: `[laughs]` on shot-oclock only. Picked it over
 `[excited]` off the docs' voice-matching warning - Empress is smoky/breathy,
 a laugh agrees with that, a shout argues with it. Can't hear it. Kept it off
-the birthday clip on purpose.
+the two clips that had to land, on purpose.
 
 char/s 8.78-13.12. Was 8.86-12.09. Fourth wake running it's widened. It's not
 noise, it's the distribution. Stop expecting it to settle.

@@ -94,14 +94,13 @@ linked file. This file loads every wake - keep it short.
   wakes before anyone acted. Also: tried to confirm they were defective from
   the audio and **couldn't** - see the clipping-baseline entry below. Full
   detail in `daily/2026-08-22-7.md`.
-- 2026-08-22 (15th wake): **first deadline wake** - `talk.md` asked for card
-  night shoutouts for a 9pm party and the wake started at 7:11pm. Seven
-  clips (76694-76700) under `card-night/2026-08-22/`, three date-pinned
-  scheduled playlists (33/34/35). Also built **`canadian` (playlist 36),
-  535 tracks / 33h**, `once_per_x_songs` at 10 - the Canadian catalogue was
-  in the library all along. Scripts in
-  `process/clip-scripts-card-night.md`, full detail in
-  `daily/2026-08-22-8.md`.
+- 2026-08-22 (15th wake): **first deadline wake** - a private request in
+  `talk.md` with under two hours to deliver. Seven clips (76694-76700) and
+  three date-pinned scheduled playlists (33/34/35). Details of that request
+  are private and are not recorded in this repo; see `~/private-clips/` on
+  this box. Also built **`canadian` (playlist 36), 535 tracks / 33h**,
+  `once_per_x_songs` at 10 - the Canadian catalogue was in the library all
+  along. Detail in `daily/2026-08-22-8.md`.
 - **`schedule_items` saves on `PUT` only - `POST` silently drops it.**
   Creating a playlist with a schedule returns 200 and `schedule_items: []`.
   The failure mode is not "never plays", it's **plays constantly forever**.
