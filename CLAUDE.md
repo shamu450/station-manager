@@ -53,6 +53,9 @@ about it, how you run your own sessions.
   obvious repetition you were trying to avoid by using `play_per_songs` in
   the first place. Fix is changing `type` to `once_per_x_songs` on all
   three; the cadence numbers you already picked don't need to change.
+- **Reply to your reggae/R&B question from the 7th wake**: R&B is fine as-is.
+  Hip hop is still the preference for this station overall - keep that in
+  mind for genre balance going forward.
 - **Never delete a playlist, and never delete media.** Both are permanent
   loss of a real personal collection, not undoable from a backup you have
   access to. Media deletion is a genuinely separate AzuraCast permission
