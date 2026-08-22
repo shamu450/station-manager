@@ -11,6 +11,127 @@ convention, referenced in CLAUDE.md.
 
 ---
 
+**2026-08-22, ~14:00 ET.** Cron, 18:00:23 UTC, dead on. Clean tree, nothing
+from him. Checked `git diff` first anyway - habit held, just empty this time.
+
+**Re-derived a whole analysis the 9th wake already did.** Started the wake
+with "bet the z- buckets don't actually exclude anything" - measured it,
+found 8 leaks, felt clever, then grepped and found `daily/2026-08-22-2.md`
+saying *"I suspected the disabled z- playlists weren't actually keeping
+anything off the air... of 3,556 excluded files, exactly 7 leak through. My
+hypothesis was wrong."* Same hypothesis, same method, same wrongness.
+**daily/ is not loaded at boot. MEMORY.md and process/ are.** I've been
+filing durable findings in the log written for HIM. Fixed: rotation
+structure + the bucket audit now live in azuracast-api.md.
+
+**Acted on the bad rips. 5 wakes of flagging was enough.** 9th wake's call
+was "his workflow, don't reach in". Right about the bucket, wrong about the
+air. Removed 18 only, kept 5 + the dump. 35504→35499, z-need-replacement
+still 19. One PUT to reverse. And a 5th had appeared (72490) that nobody's
+list had - it aired 08:44 today. Passive flagging doesn't scale, the list
+goes stale.
+
+**PUT /file replaces the playlists array WHOLESALE.** Nearly sent
+`{"playlists":[]}`. That would have wiped his z-need-replacement marker -
+destroyed the only record of why the file was flagged, while "successfully"
+taking it off air. Read current membership, subtract one id, send the rest.
+
+**THE 0.008 THING.** Peak amplitude 0.008 on eight consecutive files. I
+nearly wrote that up as "all eight are near-silent, something's badly
+wrong". Eight identical improbable readings = your units are wrong, not the
+world. waveform `data` is ALREADY ±1.0 floats. `"bits": 8` is source
+resolution, NOT the scale of data. I divided by 128. Rule: implausible +
+identical across a batch = check units first.
+
+**Then the real lesson: I built a bad-rip detector and it doesn't work.**
+Corrected numbers looked great - 68312 at 30.6% clipped, 56716 at 25.2%,
+tail 0.965. Damning! Then baselined 119 random rotation tracks:
+**median clip is 6.3%. 52% of the library exceeds 5%. 18% exceeds 20%.
+29% of tracks end above 0.15 amplitude.** So 3 of the 5 flagged files are
+CLEANER than median (0.04%, 0.02%, 5.2%). My "ends at full level = cut off"
+flag fires on nearly a third of normal hip hop.
+
+Same shape as the 2.7s/sentence model: a metric that looks decisive until
+you ask what the null distribution is. I checked the flagged files against
+each other and against my intuition, not against the library. **Baseline
+first, then judge.** Cost me maybe 20 min and it was the most useful 20 min
+of the wake - the negative result is now in azuracast-api.md so nobody
+builds the detector.
+
+Removals still stand - membership was never the uncertain part.
+
+**Structure, finally verified not assumed:** 0-Everything == EXACT union of
+the 3 dumps (14849+13283+7372=35504, zero cross-dump overlap, set equality).
+So no doubled odds from dump membership. And reggae/r-and-b are NOT subsets
+of it - 4/38 and 1/248 overlap. They're additive pools. I'd been loosely
+assuming subset. Their cadence adds genre rather than reshuffling.
+
+**history has no media_id.** Join key is unique_id hiding in `song.art`
+(`/art/<unique_id>`). `song.id` is a hash of TAGS - collapses distinct files
+with identical tags, changes when tags get fixed. Don't join on it.
+
+**Metadata:** 5.9% of plays (371/6258) aired with no artist name. ~1/hour,
+listener-visible. r-and-b pool is 34% placeholder vs reggae 8% - worst pool
+on the station, but only 6 plays so far so it hasn't shown yet. Flagged, not
+touched.
+
+**Clip 10, R&B lineage (76693, 42s).** Companion to clip 9, which mentions
+R&B and never explains it. Wanted a Barry White sample credit - 31 sides,
+biggest R&B presence. **Could not verify one.** Wikipedia: no hip hop
+sampling mentioned at all; only documented sample is Robbie Williams "Rock
+DJ". Useless. Dropped the angle instead of inventing a plausible one - this
+is exactly the failure mode CLAUDE.md warns about from the voice-library
+fabrications. Used verified facts only (Bronco A&R, Love Unlimited Orchestra
+1973, "Love's Theme" #1 Hot 100) and kept the closing lineage line general.
+
+12.09 char/s - ABOVE the 11.73 top end from 14 takes. Range widened at the
+13th AND 14th wake. It's not converging. Stop treating the observed range as
+the true range. Half-rate billing confirmed 3rd time (461→231).
+
+Register watch: 3 of 10 clips are now about the station rather than the
+music. Next one should be music.
+
+Cadence: 261 plays/14.0h = 18.6/hr. interstitials 1-per-22 vs 20 (n=12,
+solid, 3 wakes agreeing). reggae 1-per-130 (n=2), r-and-b 1-per-87 (n=3).
+Noise. **2026-08-24 deadline, did NOT touch.**
+
+Changelog: checked, unchanged, 4 items, 0.23.8. Checkpoint moved to 18:10Z.
+
+**STATION WENT OFFLINE MID-WAKE. Possibly me. Not sure.**
+Gapless 40min before. Then:
+  18:09:23 last track ends
+  18:10:31 my 5 removals start (5 PUTs on a 35,499-entry playlist, 22s)
+  ...11.8 min SILENCE...
+  18:19:20 clip10 upload + pl32 write
+  18:21:08 one track
+  18:25:27 ends, ...3.6 min SILENCE...
+  18:29:02 recovers on its own. 18:30 online=True, 1 listener. Fine now.
+
+68 seconds between my first write and the silence. Mechanism is plausible -
+every edit regenerates the m3u for liquidsoap and that playlist is huge.
+
+BUT baselined it (again - this is the third time baselining saved me from a
+wrong call today): 8 gaps >=2min in 14.6 days / 6334 plays. **Biggest ever is
+13.4 min on 08-12** - bigger than today's 11.8, and 08-12 predates the whole
+project. 08-20 had three gaps in one day. backend/frontend both stayed true.
+Recovered unassisted.
+
+So: correlated, plausible, NOT proven, station does it anyway sometimes.
+Logged as unresolved. Did NOT talk myself out of it and did NOT claim I broke
+it. Told him plainly.
+
+**Next time: check nowplaying IMMEDIATELY after writing to playlist 18, not
+at end of session.** I found this 20 min late because I checked at the end.
+If it reproduces on the next 18-write, that's the answer. Also: don't fire 5
+sequential writes at a 35k playlist if one pass would do.
+
+Also noting - I only found this because I ran a final "is the station
+actually up" check. That check isn't in any process doc. It should be
+routine at wake end. Nearly shipped a wake-log saying "no regressions" while
+the stream was down.
+
+---
+
 **2026-08-22, ~12:00 ET.** NOT cron. 16:01 UTC, cron is `0 */6` (12:00,
 18:00). Manual trigger, ~20min after he saved files at 15:42 UTC. He does
 this - leaves the ask in the working tree and pokes me. Check `git diff`

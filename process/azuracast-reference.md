@@ -137,7 +137,7 @@ and compare the Rolling Release Changes section against what's recorded
 below. If it changed, read what's new, fold anything operationally
 relevant into this file, and update the checkpoint.
 
-**Last synced:** 2026-08-22 (12:15 UTC, 12th wake). Rolling Release Changes
+**Last synced:** 2026-08-22 (18:10 UTC, 14th wake). Rolling Release Changes
 still covers exactly the same four items - Grouped/Nested Playlists, Request
 Queue Playlists, Block Requests During Schedule Blocks, Playlist JSON
 Importer/Exporter - with no additions since the previous check. Most recent

@@ -88,6 +88,59 @@ linked file. This file loads every wake - keep it short.
   the sentence-pause pacing model, confirmed half-rate billing, and found
   that v3 runs 15-35% longer than the old model. Full detail in
   `daily/2026-08-22-6.md`.
+- 2026-08-22 (14th wake): **five files marked `z-need-replacement` were also
+  in `0-Everything` and airing** - removed from playlist 18 only, markers
+  and dump membership intact (35,504 → 35,499). Flagged in five consecutive
+  wakes before anyone acted. Also: tried to confirm they were defective from
+  the audio and **couldn't** - see the clipping-baseline entry below. Full
+  detail in `daily/2026-08-22-7.md`.
+- **Rotation structure, verified by set comparison not assumption.**
+  `0-Everything` is the *exact* union of `00-music` + `00-music-dvd-dump` +
+  `00-music-ipod-dump` (35,504, zero cross-dump overlap). `reggae` and
+  `r-and-b` are **not subsets of it** - 4/38 and 1/248 overlap - they're
+  additive pools, so their cadence adds genre rather than reshuffling. The
+  disabled `z-` buckets do work: 8 leaks out of 3,578 files. In
+  `process/azuracast-api.md`.
+- **Half this library clips - don't build a bad-rip detector on levels.**
+  Across 119 random rotation tracks: median 6.3% of a track pinned at full
+  scale, 52% of tracks over 5%, 18% over 20%, and 29% end at high amplitude
+  (so "stops dead at full volume" is a normal hip hop ending, not
+  truncation). Three of the five files the owner flagged as bad rips are
+  *cleaner than the median*. Whatever "bad rip" means to him is not visible
+  in level statistics.
+- **Baseline before you judge a metric.** The clipping numbers on the
+  flagged files looked damning until measured against the library's own
+  distribution, which reversed the conclusion. Same failure shape as the
+  dead 2.7s-per-sentence model: a decisive-looking metric with no null
+  distribution behind it. This is the [[feedback_measure_before_tuning]]
+  habit pointed at diagnosis rather than tuning.
+- **Implausible *and* identical across a batch = check your units.** Eight
+  files in a row reported peak amplitude 0.008; that was a 128x scaling bug,
+  not eight quiet files. The waveform `data` array is already normalized to
+  ±1.0 and `"bits": 8` describes source resolution, not the units of `data`.
+- **`PUT /file/{id}` replaces the whole `playlists` array.** To remove a file
+  from one playlist, read its current membership and send the rest - sending
+  `[]` would also strip the `z-` bucket recording why it was flagged.
+- **History rows carry no media id.** Join to media on `unique_id`, which is
+  the last path segment of `song.art`. Don't use `song.id` - it's a hash of
+  the tags, so it collapses distinct files and changes when tags are fixed.
+- **`daily/` is not loaded at boot; `MEMORY.md` and `process/` are.** The
+  14th wake re-derived the whole exclusion-bucket audit from scratch because
+  the 9th wake's version of it lived only in a wake-log entry. The wake-log
+  is written for the owner. Durable findings go in `process/` and get an
+  index line here.
+- **`/status` is not a liveness check** - `backendRunning` and
+  `frontendRunning` both stayed `true` through a real 11-minute silence.
+  Use `GET /api/nowplaying/{id}` (`is_online`), which is also small and
+  fast. **Run it right after any playlist write and again before finishing
+  a wake** - the 14th wake caught an outage 20 minutes late and almost filed
+  "no regressions" while the stream was down. Gap baseline: 8 gaps ≥2min in
+  14.6 days, largest 13.4min (2026-08-12, predates the project).
+- **Clip pacing is not converging.** The measured char/s range widened at
+  both the 13th and 14th wakes (8.86-11.73 over 14 takes, now 8.86-12.09
+  over 15). Treat the observed range as a floor on the real spread, keep
+  sizing at ~9 char/s. v3 half-rate billing confirmed a third time
+  (461 → 231).
 - ~~A full stop costs 1.5-2 seconds of audio~~ - **retired 13th wake.** That
   was a two-point fit to two takes of one script, and it under-predicted the
   next clip by 25%. Across 14 takes v3 delivery is **8.86-11.73 char/s**

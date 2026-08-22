@@ -37,6 +37,17 @@ reading it:
 - **`sh_id` is a dense sequential counter.** No gaps across 6,091 rows, so
   the history is complete - every track the AutoDJ started is logged. You
   can trust a count from it.
+- **History rows carry no media id - join on `unique_id`, which is hiding in
+  the `art` URL.** `song.art` ends in `/art/<unique_id>`, and that value
+  matches `unique_id` on the media record (and on the `media` dict from
+  `export-config`). That is the only reliable key between "what aired" and
+  "which file"; `song.id` is a hash of the *tags*, so two different files
+  with identical artist/title/album collapse to one `song.id`, and a file
+  whose tags get fixed changes its `song.id` without changing the file.
+
+```python
+uid = row["song"]["art"].rsplit("/", 1)[-1].split("-")[0]
+```
 - **Every row also carries `listeners_start`, `listeners_end` and
   `delta_total`.** This is the only audience data available anywhere, and
   it went unread for eleven wakes. It answers "when is anyone actually
@@ -136,6 +147,14 @@ Returns peak data as interleaved min/max pairs, one pair per pixel, with
 peak level, and roughly where speech starts - i.e. to "look at" audio you
 can't listen to. Cached, see the warning above.
 
+**`data` is already normalized floats in `[-1.0, 1.0]`. Do not scale it.**
+The payload also carries `"bits": 8`, which describes the *source*
+resolution, not the units of `data` - dividing by `2**(bits-1)` shrinks
+every value 128x. The 14th wake did exactly that and got a peak of 0.008 on
+eight consecutive files before noticing that eight identical readings meant
+a bug, not eight identical files. If every file in a batch reports the same
+implausible number, suspect your units before your data.
+
 ```
 GET /api/station/{id}/file/{id}/play
 ```
@@ -176,6 +195,109 @@ and those are the least-tagged ones in any folder.
 Size scales with the playlist: ~4MB for 7,373 songs, ~20MB for the 35,514
 in `0-Everything`. Write it to a file and parse it there rather than
 holding it in context.
+
+## This library is loud, and level analysis cannot find a bad rip in it
+
+Measured 2026-08-22 (14th wake) across a random sample of 119 rotation
+tracks over 90 seconds, via the waveform endpoint:
+
+| metric | p50 | p75 | p90 | p95 | max |
+|---|---|---|---|---|---|
+| % of track pinned at full scale | 6.3 | 15.7 | 28.4 | 43.4 | 79.5 |
+| mean amplitude | 0.61 | 0.70 | 0.80 | 0.85 | 0.94 |
+| amplitude in the final second | 0.003 | 0.22 | 0.50 | 0.64 | 0.87 |
+
+**Half this library clips.** 52% of tracks spend more than 5% of their
+length at full scale, 18% more than 20%. That is what a collection of
+2000s mixtapes and loudness-war masters looks like, and it is normal here.
+
+**29% of tracks end at high amplitude**, so "stops at full level" is an
+ordinary hard ending, not evidence of truncation. Only something extreme
+(the worst case found was 0.965 in the final second) means anything.
+
+The practical consequence, and the reason this table exists: the five files
+the owner had marked `z-need-replacement` were checked against this
+distribution and **three of them are cleaner than the library median** (0.04,
+0.02 and 5.2% clipped, against a median of 6.3). Whatever makes a rip "bad"
+to him - a DJ drop over the track, a mislabel, a skip, a lo-fi source - it
+is not visible in level statistics. **Do not build a bad-rip detector on
+clipping, peak or tail amplitude.** It would flag half the station and still
+miss the actual defects.
+
+Frame-level structure was clean on all eight files examined too: no sync
+losses, no unparsed bytes, and frame-count duration matching the media
+record's `length` to a tenth of a second in every case.
+
+## Rotation structure - what actually airs, verified 2026-08-22
+
+Only four playlists are enabled. Their media sets were compared directly:
+
+- **`0-Everything` (18) is exactly the union of the three dump playlists** -
+  `00-music` (14,849) + `00-music-dvd-dump` (13,283) + `00-music-ipod-dump`
+  (7,372) = 35,504, with **zero overlap between the dumps** and zero
+  members from anywhere else. Set equality, not just matching counts.
+- **`reggae` (24) and `r-and-b` (10) are almost disjoint from it** - 4 of 38
+  and 1 of 248 respectively. They are *additional* pools, not subsets, even
+  though their files sit in the same `remote/music*` folders on disk. So
+  their `play_per_songs` cadence adds genre content rather than
+  redistributing what was already there.
+- **The disabled `z-` buckets really do keep things off air.** Of 3,578
+  files across the six of them, 8 leaked into `0-Everything` - and 5 of
+  those (all `z-need-replacement`) were removed from playlist 18 in the
+  14th wake. `z-duplicates` (1,077) and `z-not-wanted` (413) leak nothing.
+
+This was re-derived from scratch in the 14th wake because the 9th wake's
+version of it lived only in a `daily/` entry. **`daily/` is not loaded on
+wake; `MEMORY.md` and `process/` are.** Durable findings go here.
+
+## Check `nowplaying` right after any write, and again before you finish
+
+```
+GET /api/nowplaying/{station_id}
+```
+
+Returns `is_online`, `listeners.current`, the current and next track, and a
+100-row `song_history` - and unlike `/history` it's small and fast, so it's
+the right call for "is the station actually up." `/api/station/{id}/status`
+only reports `backendRunning` / `frontendRunning`, and **both stayed `true`
+through a real 11-minute silence**, so it is not a liveness check.
+
+The 14th wake found the stream offline only because it ran this check at the
+end of the session, twenty minutes after the drop-out began, and nearly
+filed a wake-log saying "no regressions" while the station was silent.
+**Make it routine: once immediately after writing to a playlist, once before
+you finish.**
+
+### Baseline for playback gaps
+
+Measured over 6,334 plays / 14.6 days, comparing each track's end
+(`played_at + duration`) to the next track's `played_at`: **8 gaps of two
+minutes or more**, the largest **13.4 minutes on 2026-08-12**. Some days
+have three. So a multi-minute silence is not automatically a fault or
+automatically your fault - but check it against this baseline before
+concluding either way.
+
+Suspected but unproven: five sequential `PUT /file/{id}` writes against
+`0-Everything` (35,499 entries) at 18:10 UTC on 2026-08-22 were followed 68
+seconds later by an 11.8-minute gap, after 40 gapless minutes. Each write
+makes AzuraCast regenerate that playlist for Liquidsoap. Prefer fewer
+writes against the big playlist, and watch for a repeat.
+
+## Removing media from one playlist without disturbing the others
+
+`PUT /file/{id}` with `playlists` **replaces the entire array**. To take a
+file out of one playlist you must send its full remaining membership, not
+an empty list - otherwise you also strip the buckets that record why it was
+flagged in the first place.
+
+```
+PUT /api/station/{id}/file/{media_id}  -d '{"playlists":[{"id":5},{"id":13}]}'
+```
+
+Used 2026-08-22 to drop five files from `0-Everything` (18) while keeping
+both their source dump and their `z-need-replacement` (5) marker intact.
+Only `mtime` changed alongside `playlists` on all five. Reversing it is one
+PUT that adds 18 back.
 
 ## Writing playlist settings
 

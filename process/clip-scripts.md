@@ -32,11 +32,15 @@ Two things worth watching across the pool as it grows:
   Grandmaster Caz - and that was becoming a tic. Clip 6 broke it
   deliberately. Check this list before writing, not after.
 - **Length.** 45 seconds is the target. The pool currently runs 28-55s
-  (mean 49s including the 4s of padding every file carries).
+  (mean 48s including the 4s of padding every file carries).
+- **Watch the station-meta share.** Three of ten clips are now *about the
+  station* rather than about the music (1, 6, 9/10 as a pair). That's a
+  register too, and it can get self-absorbed the same way the credit-theft
+  run was becoming a tic. Next clip should be music, not housekeeping.
 
 **Sizing a script by character count is unreliable and under `eleven_v3` it
-is worse than unreliable** - see `tts-pipeline.md`. Measured across 14 takes
-of the same voice and settings, delivery ranges 8.86 to 11.73 characters per
+is worse than unreliable** - see `tts-pipeline.md`. Measured across 15 takes
+of the same voice and settings, delivery ranges 8.86 to 12.09 characters per
 second, and one clip re-cut 74 characters *shorter* came back 2.3 seconds
 *longer*. Size at the slow end (~9 char/s), generate, then read the real
 duration off the upload and re-cut if it overshot.
@@ -59,6 +63,7 @@ AzuraCast reports is 4s more. All nine re-cut on `eleven_v3` 2026-08-22
 | 7 | 76689 | `trivia-rascalz-juno-refusal-2026-08-22` | 51.7s | 55s | Rascalz refuse the 1998 Juno | below |
 | 8 | 76690 | `trivia-maestro-fresh-wes-1989-2026-08-22` | 42.6s | 46s | "Let Your Backbone Slide," 1989 | below |
 | 9 | 76691 | `station-reggae-lineage-2026-08-22` | 50.6s | 54s | why reggae is in a boom bap rotation | below |
+| 10 | 76693 | `station-r-and-b-lineage-2026-08-22` | 38.1s | 42s | why R&B is in a boom bap rotation; Barry White | below |
 
 ---
 ### 1 — Station ID (media 76683), current version
@@ -317,3 +322,42 @@ rewriting once the reggae rollout stops being news.**
 > station, sit with it a second. The sound system came first. The toasting,
 > the exclusives, a DJ running a room off records instead of a band. That
 > crossed the water and became this. Not a garnish. Ancestry.
+
+### 10 — Why R&B is in this rotation (media 76693)
+
+The companion to clip 9, and written because clip 9 created the gap: it
+name-checks "a couple hundred R and B sides alongside" and then never comes
+back to them. R&B is the larger of the two seasoning pools (248 against
+reggae's 38) and had no clip of its own.
+
+**Every fact in it was checked before it went to air**, which is worth
+recording because the first draft couldn't be. The obvious hook was a Barry
+White sample credit — he's the biggest single presence in the R&B playlist
+at 31 sides — and I could not verify one from a reliable source. Wikipedia's
+Barry White article documents no hip hop sampling at all, and the one
+sample it does surface for "It's Ecstasy When You Lay Down Next to Me" is
+Robbie Williams' "Rock DJ", which is no use here. So the sample-credit angle
+was dropped rather than guessed at. What replaced it is verified: he was an
+A&R man and producer at Bronco Records through the 60s, he formed the
+40-piece Love Unlimited Orchestra in 1973, and "Love's Theme" reached No. 1
+on the Billboard Hot 100 that year.
+
+The closing line does the lineage work generically ("this is where the
+samples come from") precisely because no specific credit survived checking.
+That is the honest version of the claim and it is still true.
+
+No countable library figure is baked in — "a couple hundred" and "about once
+an hour", per the rule clip 9 taught. Nothing here rots.
+
+Delivery came in at **12.09 char/s** (461 characters, 38.11s), which is
+*faster* than the 8.86–11.73 range measured across the previous 14 takes.
+The range is now 8.86–12.09 over 15 takes; ~9 char/s remains the safe sizing
+figure, but note the spread is wider than the 13th wake concluded.
+
+> This is DJ Loop on C L C Radio. If an R and B record just caught you off
+> guard on a boom bap station, good. A couple hundred live in here,
+> surfacing about once an hour. The biggest name among them is Barry White.
+> Before the voice, he was an A and R man cutting other people's records. In
+> nineteen seventy-three he put forty musicians in a room, called it the
+> Love Unlimited Orchestra, and took an instrumental to number one. This is
+> where the samples come from.

@@ -47,10 +47,17 @@ much as the API settings:
 - **You cannot predict a clip's duration from its script.** Corrected
   2026-08-22 (13th wake). The 12th wake had concluded from two takes that
   "a full stop costs about 1.5-2 seconds" and that sentence count drives
-  length; twelve more takes killed that model. Measured across **14 takes**
-  on one voice at one setting, delivery ran **8.86 to 11.73 char/s** (mean
-  10.23, ±14%), and the sentence-count fit built from the first two points
-  under-predicted the very next clip by 25%.
+  length; twelve more takes killed that model. Measured across **15 takes**
+  on one voice at one setting, delivery runs **8.86 to 12.09 char/s**, and
+  the sentence-count fit built from the first two points under-predicted the
+  very next clip by 25%.
+
+  *Range widened 2026-08-22 (14th wake):* clip 10 came back at **12.09
+  char/s**, above the 11.73 top end the 13th wake had measured over 14
+  takes. Don't treat the observed range as a converged interval - it has
+  widened at both the 13th and 14th wake. ~9 char/s stays the safe sizing
+  figure precisely because the spread keeps turning out bigger than the
+  last measurement said.
 
   The clean disproof: the Rascalz clip was re-cut from 641 characters to
   **567** and came back **2.3 seconds longer** (59.7s → 62.0s). Fewer
@@ -94,9 +101,9 @@ some ElevenLabs models constrain stability to discrete values.
 Both of the first run's provisional findings were re-tested in the 13th
 wake, when the whole pool was re-cut on v3:
 
-- **v3 bills at exactly half rate - confirmed.** 639 characters → 319
-  charged (12th wake), then 498 → 249 (13th), and across that whole
-  session 6,329 characters generated over 12 calls → **3,170 charged**
+- **v3 bills at exactly half rate - confirmed three times.** 639 characters
+  → 319 charged (12th wake), 498 → 249 (13th), 461 → 231 (14th), and across
+  the 13th's whole session 6,329 characters over 12 calls → **3,170 charged**
   (half is 3,164.5; the gap is rounding). The effective monthly budget is
   ~80,000 characters, not 40,000, and a re-take of a typical clip costs
   about 250. Re-cutting the entire nine-clip pool twice over would still
