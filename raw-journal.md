@@ -11,6 +11,72 @@ convention, referenced in CLAUDE.md.
 
 ---
 
+**2026-08-22, ~01:03 ET.** Another manual wake, 40 min after the last ended.
+cron is 0 */3 so 00/03/06 UTC; this was 05:02. He's clearly up and watching.
+Which turns out to be relevant, see below.
+
+**Solved the truncation thing.** Two wakes carried it as "chronic,
+unexplained, low priority." It's manual skips. The number that did it:
+UTC 08-13 (04:00-09:00 ET), 1,461 plays across 14 days, ZERO cut-offs.
+Expected ~50 at the 3.4% base rate. e^-50. Nothing environmental sleeps
+4am-9am. Everything else fell in behind it once I had that - bursts (62% in
+20 clusters), 2.6x near requests, victims in every folder including MY OWN
+43s Duke Bootee clip which plays fine every other time.
+
+Sequence that got me there, for next time: (1) split short-file from
+real-cut-off on duration>35 - 17% of the "4.1%" was just skits and outros,
+real rate is 3.4%; (2) check if victims ever play full elsewhere - 26 do,
+so not bad files; (3) look up actual paths - spanned remote/music,
+music.dump, music-ipod, interstitials, so not one bad folder or mount;
+(4) cross-tab by hour. Step 4 was the one. Should have gone there first -
+time-of-day is the cheapest test for "is a human in the loop" and I did it
+fourth.
+
+Also checked sh_id continuity - dense, no gaps, 12402..18492. History is
+complete, can trust counts off it.
+
+23 of 24 of today's cut-offs outside my wake windows. Previous wake said
+the same and was right; confirmed rather than re-litigated.
+
+**avoid_duplicates has a hole I put there last wake.** It matches the raw
+artist tag. 73 artists split across spellings. Jay-Z is stored FOUR ways
+including one with U+2010 instead of a hyphen. Costs 2/15 back-to-back and
+12/91 within-four. ~87% effective, not 100%. Can't fix (no metadata edits),
+told him it makes the tag cleanup worth real money.
+
+Reconciled last wake's 15/47 duplicate numbers - they match my normalized
+window-2 and window-3 exactly. No correction needed, they'd already
+normalized. Good.
+
+**Rotation shape, first time measured**: 6,023 rotation plays, 5,555
+distinct songs, 1,860 distinct artists, 14 days. Almost nothing repeats.
+2Pac top at 79 but only after merging 2Pac/2pac - raw he reads behind the
+54-way tie (Jay-Z/Yukmouth/Eminem).
+
+**Interstitial cadence CLOSED.** Open 3 wakes. Measured: 1 per 24 songs,
+~65 min, all 5 clips played exactly once, no repeats. pps=20 stays. Not
+punting it a fourth time.
+
+Clip #6 = the rotation numbers, first non-book clip. media 76688, 44s,
+playlist 32 -> 6 clips / 230s. Deliberate change of register, 4 of 5 prior
+were credit-theft stories out of the seeds and that was becoming a tic.
+
+reggae/r-and-b STILL unverifiable. Fix commit 03:57:06 UTC, wake at 05:02 =
+27 plays. pps is 100/80. Neither can have fired. Zero observed is exactly
+what the config predicts. 4th wake open, still for a boring reason.
+
+Skipped the changelog check - synced 04:54, 8 min before I started.
+
+Next wake: if he confirms the skips are his, the history becomes a taste
+feed and that's a genuinely new capability - repeat-skip list -> z-not-wanted
+candidates. Don't act on it unprompted, the stereo-tools testing means some
+skips mean nothing. Also memory/ still has no detail files, only the index;
+CLAUDE.md describes it as index + detail-on-demand. Fixed the index being
+4 wakes stale, didn't build detail files - daily/ and process/ are carrying
+that load and splitting it might just duplicate.
+
+---
+
 **2026-08-22, ~00:10 ET.** Wake fired 13 min after the last one ended - not
 cron (`0 */3`), manual. wake.sh commit right before it switched model
 Sonnet 5 -> Opus. So: first Opus wake, kicked off to watch it.
