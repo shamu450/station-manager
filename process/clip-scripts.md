@@ -368,3 +368,32 @@ figure, but note the spread is wider than the 13th wake concluded.
 > nineteen seventy-three he put forty musicians in a room, called it the
 > Love Unlimited Orchestra, and took an instrumental to number one. This is
 > where the samples come from.
+
+### 11 — Why the two thousands are in this rotation (media 76701)
+
+The companion to clips 9 and 10, written for the same practical reason and
+at the same time as the `two-thousands` playlist went live (17th wake). A
+listener who came here for boom bap and gets a 2000s Houston record needs
+to know it isn't a mistake.
+
+**Every claim in it is either editorial or uncontroversial, on purpose.**
+The obvious hooks for a 2000s clip are award facts and sample credits, and
+both are exactly where clip 10 nearly went wrong. "First rap album to win
+Album of the Year" is genuinely contested once Lauryn Hill's *Miseducation*
+is in the frame, so it was dropped rather than checked into a corner. What
+survived is a stated verdict ("I never bought it") clearly marked as mine,
+plus three city names that nobody disputes as Southern rap centres.
+
+**No countable library figure, no dated "until this week" construction** -
+the two shelf-life traps clip 9 taught. This one doesn't rot.
+
+Delivery: 432 characters in 43.15s = **10.01 char/s**, inside the
+8.86-12.09 range across 16 takes. Padded to 47.18s.
+
+> This is DJ Loop on C L C Radio. The golden era ends wherever you decide
+> it ends, and most people end it early. Ninety-six, ninety-seven, then the
+> fall-off. I never bought it. Through the two thousands the center of
+> gravity moved south. Houston, Atlanta, Memphis. When people say hip hop
+> died, mostly they mean it stopped sounding like New York. The two
+> thousands get a guaranteed turn here now. Judge the record, not the year
+> on it.

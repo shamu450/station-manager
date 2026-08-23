@@ -106,6 +106,41 @@ linked file. This file loads every wake - keep it short.
   had no privileged place in rotation until now. Also **disabled three live
   event playlists by mistake and restored them 3 minutes later** - see the
   timezone bullet below. Detail in `daily/2026-08-22-9.md`.
+- 2026-08-23 (17th wake): built **`two-thousands` (playlist 38), 2,459
+  tracks / 161h**, `once_per_x_songs` at 10 - closing an imbalance the 16th
+  wake created by giving 1988-2001 a guaranteed slot and the other half of
+  the stated format none. 11th clip (media 76701). Detail in
+  `daily/2026-08-23.md`.
+- **Build pools on year, region or artist - never on mood, tempo or vibe.**
+  The seven "mellow" tokens together give 759 tracks but only **38 artists,
+  top-5 = 55%** (Tribe 113, 2Pac 102, Gang Starr 95). The same filter gated
+  on path year gives 2,459 tracks across **159 artists**. Cause is the
+  per-album tagging already on record: a mood token lands on a whole album
+  or none of it, so it collapses to whoever got tagged - whereas year is
+  *also* per-album but **every album has one**, so it partitions evenly.
+  A late-night/mood block is therefore not a scheduling problem and not
+  buildable until the library carries BPM or per-track tags; deriving BPM
+  would mean sweeping library audio, which is not this role's work. In
+  `process/azuracast-api.md`.
+- **The `z-` exclusion buckets are cleanup of the *dumps*, not of
+  `remote/music/`.** Zero of the 2,678 files in the 2002-2009 window sit in
+  any of them; `z-skits` has 1,829 members and **2** live in
+  `remote/music/`. A pool sourced from the organized collection needs
+  almost no exclusion filtering - but still run the check, it's one set
+  intersection, and `canadian` did lose 24 tracks to it because that pool
+  reached into the dumps.
+- **`once_per_x_songs` under-delivers against its nominal rate - unresolved,
+  do not tune on it yet.** First configured-vs-actual measurement
+  (2026-08-23, 112 plays): `golden-era` 1-in-7.0 against a configured 5,
+  `canadian` 1-in-14 against 10, `interstitials` 1-in-22.4 against 20 -
+  every pool 12-40% low, most likely slot contention. **The window is
+  contaminated** by three date-pinned event playlists from a private
+  request running at pps 6/10/6, and has no uncontended stretch to compare
+  against. Re-measure over a normal day;
+  until then read `play_per_songs` as "at most one in X".
+- **Cap debug prints of per-file samples.** An uncapped artist-path dump put
+  ~150 lines of one artist's discography into context for no gain. Print
+  counts and a handful of examples.
 - **The environment reports UTC; the station runs `America/Toronto`.** For
   five hours every evening they are different calendar days. The 16th wake
   compared a UTC date against Eastern-pinned `start_date` rows, concluded

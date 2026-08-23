@@ -411,3 +411,79 @@ set. That's how you catch a partial PUT quietly clearing something else.
 - `reports/duplicates` - 405 on GET.
 - `POST /api/station/{id}/media` - 405; media upload goes through
   `POST /files` (see `generate_and_upload.sh`).
+
+## Mood pools are not buildable from this library's tags. Year pools are.
+
+Measured 2026-08-23 (17th wake) while costing out a late-night block, and
+recorded so nobody prices that idea again from scratch.
+
+Union of the seven "mellow" tokens (`jazz rap`, `conscious hip hop`,
+`alternative hip hop`, `neo soul`, `jazz`, `soul`, `trip hop`) over
+`remote/music/`, at >=100s: **759 tracks but only 38 distinct artists, with
+the top five making up 55% of the pool** (Tribe 113, 2Pac 102, Gang Starr
+95, Cypress Hill 58, Souls of Mischief 50). As a guaranteed-slot playlist
+that is Tribe and Gang Starr on a loop.
+
+Compare the same filter gated on **path year** instead: 2002-2009 gives
+2,459 tracks across **159 artists**, top artist 6.0%.
+
+The cause is the per-album tagging already documented above - a mood token
+lands on every track of an album or none of it, so the token set collapses
+to whichever handful of artists happened to get tagged. **Year is a
+per-album property too, but every album has one, so it partitions the
+library evenly instead of clumping it.**
+
+Practical rule: **build pools on year, region or artist. Do not build them
+on mood, tempo or vibe** until the library carries BPM or per-track tags.
+There is no BPM field on the media record and no audio analysis available
+to derive one (and deriving it would mean sweeping the library, which is
+not this role's work).
+
+## The owner's `z-` buckets barely touch `remote/music/`
+
+Checked 2026-08-23 across all 2,678 files in the 2002-2009 window:
+**zero of them sit in any exclusion bucket.** `z-skits` has 1,829 members
+and exactly **2** of them live in `remote/music/`; the rest are in the two
+dump folders.
+
+So the exclusion buckets are the owner's cleanup of the *dumps*, not of the
+organized collection. A pool sourced from `remote/music/` needs almost no
+exclusion filtering - but run the check anyway, it is one set intersection
+against export-configs you already have, and `canadian` did lose 24 tracks
+to it because that pool reached into the dumps.
+
+## `once_per_x_songs` under-delivers when pools compete - UNRESOLVED
+
+First measurement of configured-vs-actual cadence, 2026-08-23, over the 112
+rotation plays since `golden-era` went live:
+
+| playlist | configured | actual |
+|---|---|---|
+| `golden-era` | 1 in 5 | 1 in 7.0 |
+| `canadian` | 1 in 10 | 1 in 14.0 |
+| `interstitials-dj-loop` | 1 in 20 | 1 in 22.4 |
+
+Every pool lands *below* its nominal rate, by 12-40%. The obvious
+explanation is contention: only one playlist can own a given song slot, so
+when several `once_per_x_songs` pools come due together they queue and slip.
+
+**Do not tune anything on these numbers.** The whole window overlaps three
+date-pinned event playlists from a private request, running at pps 6, 10
+and 6 - far heavier contention than the station normally carries - and
+there is no clean uncontended stretch inside it to compare against. Re-measure over a normal
+day before treating the shortfall as real, and read `play_per_songs` as
+"at most one in X", not "exactly one in X", until then.
+
+## `GET /station/{id}/queue` is 403 with this key
+
+Returns `PermissionDeniedException`, not an empty list - the scoped role
+does not cover the AutoDJ queue. So **you cannot inspect what is cued next**
+to verify a newly-enabled playlist is eligible. The available substitutes:
+
+- `GET /api/nowplaying/{id}` exposes a single `playing_next` (no auth
+  needed), which is one track, not the queue.
+- Otherwise wait and read `/history`. A pool at `play_per_songs: N` needs
+  roughly N songs (~3 min each) before its first fire, so "0 plays" minutes
+  after enabling is expected, not a fault. Confirm the playlist is
+  `is_enabled`, `type: once_per_x_songs` and has a non-zero `num_songs`,
+  then check history later rather than concluding anything early.

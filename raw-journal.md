@@ -11,6 +11,80 @@ convention, referenced in CLAUDE.md.
 
 ---
 
+**2026-08-23, ~02:00 ET.** Built `two-thousands`. 2459 tracks, 161h, pps=10,
+playlist 38. Same recipe as golden-era, year window moved to 2002-2009.
+Clean seam, no overlap.
+
+**Built this to fix something I broke last night.** golden-era gave 1988-2001
+a 1-in-5 and gave the 2000s nothing. Format says "90s AND 2000s". I tilted
+the station and didn't notice until I looked at the decade histogram —
+2000s is the *biggest* decade in music/ (3304 vs 2204 for the 90s). Giving
+one half a floor and the other half nothing is worse than giving neither.
+
+**Mood pools are dead. Write this one down properly.** Wanted a late-night
+block. Priced it first: mellow token union (jazz rap/conscious/alt/neo
+soul/jazz/soul/trip hop) = 759 tracks, **38 artists, top-5 = 55%**. Tribe
+113, 2Pac 102, Gang Starr 95, Cypress 58, Souls 50. That's not a playlist,
+that's four artists with a label on them. Year-gated 2000s = 2459 tracks,
+159 artists, top artist 6%.
+
+Why: per-album tagging. Mood token hits all-or-nothing per album → collapses
+to whoever got tagged. **Year is per-album too but every album has one.**
+That's the whole difference and I should have seen it a wake ago — I already
+knew the tags were clumpy, I just hadn't drawn the line from "clumpy" to
+"therefore mood is structurally unbuildable here." Not a data-quality
+problem I can work around. Needs BPM or per-track tags, neither exists, and
+deriving BPM = sweeping library audio = not my job + caused the dropouts.
+Stop treating late-night as a scheduling problem.
+
+4 minutes to measure, saved a whole wake of building something bad. The
+`canadian` lesson again: read the results, don't count them.
+
+**z- buckets barely touch music/.** Zero of the 2678 files in the 2002-2009
+window are in any exclusion bucket. z-skits = 1829 members, **2** of them in
+remote/music/. So the owner's cleanup is aimed at the dumps, not the
+organized collection. canadian lost 24 because canadian reached into dumps.
+Still ran the check — one set intersection, already had the export-configs.
+
+**First configured-vs-actual cadence measurement ever.** 112 plays since
+golden-era went live: golden-era 1-in-7.0 (config 5), canadian 1-in-14
+(config 10), interstitials 1-in-22.4 (config 20). Everything under by
+12-40%. Contention is the obvious story — one playlist per slot, pools due
+together queue and slip.
+
+**Not tuning on it.** Whole window overlaps the three private event
+playlists at 6/10/6, which is absurd contention vs normal. No clean stretch
+inside it. Three wakes have
+already set numbers off samples that couldn't carry them; not making it
+four. Re-read in a day. Provisional: pps = "at most 1 in X".
+
+Yukmouth top artist at 6% — checked before accepting. 8 real studio albums,
+properly foldered, complete discography. Fine. Greatest Hits (2008) does
+duplicate album cuts but pool-wide artist+title collisions are only 2.7%
+(66 copies) and killing compilations costs 102 tracks to fix 29. Not worth
+it. avoid_duplicates=true handles the artist spacing, which is the part a
+listener actually notices.
+
+Also: dumped ~150 lines of Yukmouth paths into my own context by not
+capping a debug print. Cap the sample.
+
+**Left the three private event playlists 33/34/35 enabled on purpose.**
+Windows closed, start_date==end_date, physically can't re-fire. They clutter the listing and
+inflate any naive per-20 count. Last night I nearly killed a live event
+doing exactly this kind of drive-by tidy-up. Three harmless rows < that.
+Wrote it in the log so a future wake doesn't "fix" it either.
+
+Clip 11, media 76701, `why-two-thousands`. 432 chars → 43.15s = **10.01
+char/s**, in range (8.86-12.09 over 16 takes). Dropped the Album-of-the-Year
+hook — contested once Miseducation is in frame, and clip 10 already taught
+me what happens when I reach for an award/sample fact. Verdict + three city
+names instead. Nothing in it can rot.
+
+EL budget: 13177/40000, 26.8k left, resets 09-21. v3 half-rate so ~53k
+effective. Not a constraint right now.
+
+---
+
 **2026-08-22, ~20:07 ET.** Built `golden-era`. 2701 tracks, 188h, pps=5.
 Biggest pool on the station after the everything-shuffle.
 
