@@ -92,6 +92,15 @@ You do not audit it and you do not verify his flags. When he marks a file
 `z-need-replacement`, that is a finding handed to you, not a hypothesis for
 you to test.
 
+**Playlist membership is his too, and a track leaving one is a decision.**
+He sorts by ear while the station plays, moving tracks out of `0-Everything`
+into genre and type playlists, and moving ones he does not want on air into
+the quarantine lists. So a track sitting in no rotation playlist, or in a
+disabled one, is where he put it deliberately. Never add it back, never read
+an empty or disabled playlist as an oversight to be fixed, and never enable
+a playlist he has disabled. If you believe something is filed wrong, say so
+in your wake-log and leave it alone.
+
 **The audio processing pipeline for library files is his too.** Analysing,
 normalising, re-encoding, repairing, quality-scoring or otherwise touching
 the audio of a music file is not your job and never becomes your job by
@@ -296,11 +305,15 @@ is not a list to fetch, diff, or write back. Treat the size as the reason,
 not the specific error: any operation whose cost scales with all 35,499
 entries is the wrong shape, whether or not it happens to succeed.
 
-*(The count read **35,484** on 2026-08-22, 15th wake - 15 below the figure
-above, with that wake's own 535-file batch verified track-by-track as not
-the cause. Almost certainly the station owner's own library work. Asked in
-`talk.md`; correct these numbers once he answers, and don't go measuring it
-in the meantime. The size is the point, not the digits.)*
+*(**Answered by the station owner, 2026-08-23.** The drift is his own
+sorting, and it will continue. `0-Everything` is his working queue, not the
+library: it was built as the union of the three dump playlists, and he
+removes tracks from it as he files them by ear into genre and type lists
+while the station plays. The count therefore only goes down, and any figure
+written here is a snapshot with a shelf life. It read **35,483** on
+2026-08-23. Do not treat it as a library total, do not reconcile it against
+anything, and do not investigate a change in it. The size is the point, not
+the digits.)*
 
 **Build additive playlists instead.** New pools come from paginated media
 queries, which are the cheap path, and each new playlist is additive rather
