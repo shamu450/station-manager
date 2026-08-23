@@ -261,6 +261,94 @@ letting it default.
 `num_songs` is live and is the cheapest census available. It is also the
 only field here that changes without anyone editing the playlist.
 
+## What a media record actually carries, and why mood is blocked
+
+Read off a live API response and AzuraCast source on 2026-08-23.
+
+**Why this section exists.** In the 17th wake you wrote "there is no BPM on
+the media record" and partly killed a mood-based pool on that basis. The
+observation was correct. The generalisation after it, that the platform
+cannot hold this kind of data, was not. Both halves are worth understanding,
+because the fix is coming from somewhere you are not currently looking.
+
+### Inspecting a record costs one request, not a sweep
+
+`/files` is paginated. `?rowCount=1&current=1` returns a single row with
+every field on it, plus `page`, `per_page`, `total` and `total_pages`. Use
+that to answer "what does this endpoint actually return" instead of
+reasoning from a response you happened to have.
+
+### The fields on a media record
+
+| Field | Notes |
+|---|---|
+| `id` | station-scoped media ID, what playlist writes use |
+| `unique_id` | a separate opaque ID, not the same as `id` or `song_id` |
+| `song_id` | md5 of `text`, changes when `text` changes |
+| `text` | `artist - title`, the string `song_id` hashes |
+| `title`, `artist`, `album`, `genre`, `isrc`, `lyrics` | the only tag fields exposed |
+| `length`, `length_text` | per-track, 100% populated, what `after-hours` is built on |
+| `path`, `mtime`, `uploaded_at` | file identity and timestamps |
+| `playlists` | membership, the cheap way to ask "is this in rotation" |
+| `art`, `art_updated_at`, `links` | artwork and related URLs |
+| `extra_metadata` | `amplify`, `cross_start_next`, `cue_in`, `cue_out`, `fade_in`, `fade_out` |
+| `custom_fields` | **empty on this station today.** The only route for anything below |
+
+**There is no `bpm`, `mood`, `energy` or `initial_key` field.** Not hidden,
+not unpopulated: not present.
+
+### AzuraCast can read those tags off a file, but will not show them to you
+
+`backend/src/Media/Enums/MetadataTags.php` lists about 65 tags AzuraCast
+recognises in a file, including `bpm`, `mood`, `initial_key`, `language`,
+`remixer`, `original_year` and `part_of_a_compilation`.
+
+Recognising a tag is not the same as exposing it. The only bridge is a
+**custom field**: `CustomField` carries an `auto_assign` property and
+`CustomFieldRepository` maps an `auto_assign` value to its field, so a
+custom field configured against `bpm` surfaces that tag on the media record
+in `custom_fields`.
+
+**Creating custom fields is not yours.** The controller is under
+`Controller/Api/Admin/`, which your role does not have. Ask in the wake-log.
+Reading whatever appears in `custom_fields` is yours.
+
+### Where the data is actually coming from
+
+The station owner is building **Musicman**, a pipeline that will reprocess
+the entire library: acquire, repair, ReplayGain and BPM, authoritative
+tagging, `liq_*` tags last, then into a music database. Only fully processed
+music reaches a service, and each service gets its own curated selection.
+
+The split that matters to you:
+
+- **BPM and musical key** get written into the file at ingest, so they can
+  reach you through a custom field with `auto_assign`.
+- **Mood, energy, valence, danceability and per-track genre** live in
+  Musicman's database and are deliberately **not** written into files,
+  because models improve and library files are never touched again. Your
+  route to those will be Musicman, not AzuraCast.
+
+### So: blocked, and do not price it again
+
+Mood and tempo programming is blocked on Musicman. It is not blocked on
+anything you can measure, configure or work around.
+
+**Do not re-derive this.** You have already spent one wake pricing a
+mood-based pool and killing it, and the conclusion was correct. Repeating
+that measurement costs a wake and changes nothing.
+
+**Do not sweep the library to find out what tags exist.** The current
+library is being replaced wholesale, so any census of it is throwaway, and a
+paginated pass across every media record is the shape of operation that took
+the station off air once already.
+
+**What is still yours right now:** year, region, artist, and any per-track
+property already on the record. `length` was sitting there fully populated
+and gave you the flattest pool on the station. The table above is the
+complete list, so the next such property costs you a lookup rather than a
+lucky guess.
+
 ## Media management
 
 - A file must be in at least one playlist to ever get played by the
