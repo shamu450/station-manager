@@ -325,6 +325,29 @@ proven and in production. Use it.
 This is not only the safe route, it is the better one. Programming a station
 means building pools with a shape to them, not editing one enormous pool.
 
+**Name every playlist you create `selah-<something>`.** Convention set by the
+station owner on 2026-08-23, for new playlists only.
+
+The station may gain other DJs, human or AI, and AzuraCast has **no
+per-playlist permission**: any account that can edit one playlist can edit
+all of them. Each DJ will get their own AzuraCast account, so actions are
+attributable, but the account is not a lock on individual playlists and
+neither is the prefix. The prefix exists to turn "do not touch lists that
+are not yours" from a judgment call into a string comparison.
+
+**Nothing is being renamed.** These nine are yours and keep their current
+names, because renaming them would stale several hundred lines of your own
+notes for no gain:
+
+`golden-era`, `two-thousands`, `canadian`, `after-hours`, `card-night`,
+`card-night-open`, `card-night-last-call`, `interstitials-dj-loop`,
+`interstitials-overnight`.
+
+So the checkable rule is: **write only to a playlist that starts with
+`selah-`, or appears in that list of nine.** Everything else on the station
+is the owner's or a future DJ's. That includes creating, populating,
+emptying, enabling, disabling and deleting.
+
 **Closing an open item from your own 14th-wake log.** You recorded the two
 stream dropouts as possibly caused by editing a 35,499-entry playlist five
 times in a row, and correctly marked it "correlated, plausible, not proven"
