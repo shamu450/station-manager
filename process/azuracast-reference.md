@@ -191,6 +191,76 @@ a *reporting* query and shares no code with the eligibility path above.
 Don't spend a wake wondering why a correct schedule looks empty there.
 Verify by reading `schedule_items` back off the playlist instead.
 
+## Every field on a playlist object
+
+Read off live API responses on 2026-08-23, not from the docs. `GET
+/api/station/{id}/playlists` returns all of these on every playlist.
+
+**Scope marker:** [you] is yours to set. [owner] is the station owner's
+call, ask in the wake-log. [read] is server-set, never send it.
+
+### Identity
+
+| Field | What it is |
+|---|---|
+| `name` [you] | Display name. |
+| `description` [you] | **Free text, and separate from the station profile description you cannot change.** Nothing restricts this one. Say what the playlist is for and what belongs in it, so the next reader does not infer it from the name. |
+| `is_enabled` [owner] | On air or not. A disabled playlist is off for a reason only the owner knows: staging, seasonal, quarantine, or blocked on a fix. Never enable one. |
+
+### Where the tracks come from
+
+| Field | What it is |
+|---|---|
+| `source` [you] | `songs` for media, or `playlists` for a group. Every playlist here is `songs`. |
+| `playlists` [you] | Member playlists when `source: playlists`. This is Grouped/Nested Playlists, above. Empty on every playlist here, so the feature is unused, not unavailable. |
+| `playlist_groups` [you] | Group membership. Empty everywhere here. |
+| `order` [you] | `shuffle` on every playlist here. Sequential ordering is the alternative and has never been used. |
+| `podcasts` [you] | Podcast episodes as a source. Empty everywhere. |
+| `remote_url`, `remote_type`, `remote_buffer` [owner] | For a playlist that is really a remote stream relay. Unused here, `stream` and `0` are just defaults sitting in the field. |
+
+### Cadence
+
+| Field | What it is |
+|---|---|
+| `type` [you] | `default` (General Rotation, competes by `weight`), `once_per_x_songs`, `once_per_x_minutes`, `once_per_hour`, or `custom`. **`play_per_songs` is only applied when `type` is `once_per_x_songs`**, documented above and in `CLAUDE.md`. This has already caused one silent failure. |
+| `weight` [you] | Only meaningful for `type: default`. Everything here is `3` except `000-exxxplicit` at `1`. |
+| `play_per_songs` [you] | Songs between plays. `4` on after-hours, `10` on card-night. |
+| `play_per_minutes` [you] | Minutes between plays, for `once_per_x_minutes`. `0` everywhere here, so untested on this station. |
+| `play_per_hour_minute` [you] | Which minute of the hour, for `once_per_hour`. `0` everywhere, also untested. |
+
+Two cadence modes on this station have never been used. If a per-songs
+cadence is fighting you, per-minutes may be the better fit rather than more
+tuning of the same field.
+
+### Scheduling
+
+| Field | What it is |
+|---|---|
+| `schedule_items` [you] | Time windows. **Does not save on POST, only on PUT.** See the scheduling section above. |
+
+Live items carry two fields not in the shape documented above:
+`prevent_requests` (blocks listener requests during the window) and a
+server-assigned `id`. Include `prevent_requests` deliberately rather than
+letting it default.
+
+### Behaviour
+
+| Field | What it is |
+|---|---|
+| `is_jingle` [you] | Suppresses metadata only. Never cadence, never fades. Confirmed in `azuracast.handle_jingle_mode`. |
+| `avoid_duplicates` [you] | `true` on the rotation playlists, `false` on `z-christmas`. |
+| `include_in_requests` [you] | Whether listeners can request from it. `true` on most, including the card-night jingle lists, which is probably unintended. |
+| `include_in_on_demand` [you] | On-demand download. `false` everywhere. |
+| `backend_options` [owner] | Liquidsoap-level options. Reads as `[""]` on every playlist, which is an empty default, not a setting. Do not touch. |
+
+### Server-set, never send
+
+`id`, `station_id`, `short_name` (slug derived from `name`), `num_songs`,
+`total_length` (seconds), `played_at`, `queue_reset_at`, `links`.
+
+`num_songs` is live and is the cheapest census available. It is also the
+only field here that changes without anyone editing the playlist.
+
 ## Media management
 
 - A file must be in at least one playlist to ever get played by the
