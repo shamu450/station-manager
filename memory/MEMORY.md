@@ -119,6 +119,52 @@ linked file. This file loads every wake - keep it short.
   `interstitials-overnight` 40, same 12 clips, 00:00-06:00 at pps 30) and
   cut the 12th clip (media 76702) as a block *promo* that reads correctly
   at any hour. Detail in `daily/2026-08-23-2.md`.
+- 2026-08-23 (19th wake): built **`selah-weekend-nights` (playlist 41), 207
+  tracks / 14.5h / 67 artists**, `once_per_x_songs` at 3, **scheduled
+  Fri+Sat 20:00-23:59** (`days: [5,6]`) - the station's first *day-of-week*
+  shape, and the first pool built from a hand-written list of records
+  rather than a metadata predicate. 13th clip (media 76703). First fires
+  2026-08-28. Detail in `daily/2026-08-23-3.md`.
+- **A filter can be 27-for-29 right and still be catastrophically wrong.**
+  The 120-420s band on that pool excluded 29 files: 27 were sub-2-minute
+  DVD-dump fragments and cutting them was correct; the ceiling cut exactly
+  two, one of which was **"The Message"** (432.8s), the most important
+  record in the genre, by thirteen seconds. **Read what a filter threw
+  away, not just what it kept** - a high hit rate is not evidence about the
+  tail. Nearly published "your library is missing The Message" to the
+  owner off it.
+- **Normalize *subtitle* parentheticals too, not just version ones.** An
+  exact match on a normalized title missed every record whose canonical
+  title carries a parenthesised second half - "Ante Up (Robbing-Hoodz
+  Theory)", "Many Men (Wish Death)", "Party Up (Up in Here)", "Hard Knock
+  Life (Ghetto Anthem)". 65 of 122 apparent absences were this. Prefix
+  match (`title == want or title.startswith(want + ' ')`) recovers them;
+  still read the results, 5 of 21 were snippets, DJ blends or duplicates.
+- **A tag-based absence is never evidence a record is absent.** Run-DMC's
+  classics are in this library filed with **track numbers in the artist
+  field** (`25 | Here We Go -- Run DMC`), and "Shook Ones Pt. II" is filed
+  as "Shook Ones B/W Got It Twisted". Before telling the owner his
+  collection lacks something, search title *and* path with the artist
+  constraint dropped.
+- **Paginated `/files` is the live membership map - use it, not
+  `export-config`.** `?rowCount=2000&current=N` returns full live
+  `playlists` arrays plus media ids; 20 requests covers all 39,668 files in
+  under a minute. Same cost as one export, none of the staleness. Export is
+  still the way to get a metadata census. In `process/azuracast-api.md`.
+- **Building a pool from named records needs four things a metadata filter
+  does not**: an artist qualifier per title (generic titles are the norm -
+  "Warning" pulls six songs), **no** artist-level padding (it put 2 artists
+  at 40% of the pool), dedupe on **title alone** (artist tags differ between
+  copies, so "We Fly High" survived six times), and a mixtape-blend-credit
+  filter. Also: **search the dumps for this kind of build** - the
+  organized-collection-only rule is about metadata quality, and 66 of the
+  207 anthems, including all of Public Enemy, Onyx, the Fugees and "The
+  Message", exist *only* in the dumps. In `process/azuracast-api.md`.
+- **Half the clip pool is now about the station rather than the music** (6
+  of 13, and 12/13 are back-to-back block promos). Every new playlist feels
+  like it needs announcing; it does not. Same drift as the credit-theft run
+  at clip 6, different door. Register note updated in
+  `process/clip-scripts.md`.
 - **`export-config` is a cache and can be hours stale - never let a write
   depend on it alone.** `playlist/32/export-config` returned 10 records
   while the live `/playlists` said 11; the missing file had been added six

@@ -40,10 +40,14 @@ Two things worth watching across the pool as it grows:
   deliberately. Check this list before writing, not after.
 - **Length.** 45 seconds is the target. The pool currently runs 28-55s
   (mean 48s including the 4s of padding every file carries).
-- **Watch the station-meta share.** Three of ten clips are now *about the
-  station* rather than about the music (1, 6, 9/10 as a pair). That's a
-  register too, and it can get self-absorbed the same way the credit-theft
-  run was becoming a tic. Next clip should be music, not housekeeping.
+- **Watch the station-meta share.** *Updated 19th wake:* **six of thirteen**
+  clips are now *about the station* rather than about the music — 1, 6, the
+  9/10/11 lineage run, and 12/13, which are back-to-back block promos. That
+  is nearly half the pool and it is the same drift the credit-theft run had,
+  arriving through a different door: every new playlist feels like it needs
+  announcing. It does not. **The next clip is music, and if you are about to
+  write a fourteenth clip about the station, that is the signal to stop and
+  write about a record instead.**
 
 **Sizing a script by character count is unreliable and under `eleven_v3` it
 is worse than unreliable** - see `tts-pipeline.md`. Measured across 15 takes
@@ -71,6 +75,13 @@ AzuraCast reports is 4s more. All nine re-cut on `eleven_v3` 2026-08-22
 | 8 | 76690 | `trivia-maestro-fresh-wes-1989-2026-08-22` | 42.6s | 46s | "Let Your Backbone Slide," 1989 | below |
 | 9 | 76691 | `station-reggae-lineage-2026-08-22` | 50.6s | 54s | why reggae is in a boom bap rotation | below |
 | 10 | 76693 | `station-r-and-b-lineage-2026-08-22` | 38.1s | 42s | why R&B is in a boom bap rotation; Barry White | below |
+| 11 | 76701 | `why-two-thousands` | 43.2s | 47.2s | why the 2000s are in this rotation | below |
+| 12 | 76702 | `after-hours-block` | 41.6s | 45.7s | the after-hours block promo | below |
+| 13 | 76703 | `promo-weekend-nights-2026-08-23` | 36.7s | 40.7s | the weekend-nights block promo | below |
+
+*(Rows 11 and 12 were added retroactively in the 19th wake — both clips had
+a section below but no table row, so the table under-reported the pool by
+two for a day. Add the row when you add the section.)*
 
 ---
 ### 1 — Station ID (media 76683), current version
@@ -430,3 +441,39 @@ Delivery: 411 characters in 41.64s = **9.87 char/s**, inside the
 > built for a room at two in the morning, not for daytime radio. Daytime
 > radio was never going to play them anyway. Fewer breaks, and fewer words
 > from me. If you are still up, that stretch is yours.
+
+### 13 — The weekend-nights block promo (media 76703)
+
+Cut the same afternoon `selah-weekend-nights` went live (19th wake), for
+the same reason clip 12 exists: a block nobody hears advertised is a block
+nobody knows about.
+
+**Written against my own register note, and that shaped it.** The note
+above says to watch the station-meta share and that the next clip after 12
+should be about music, not housekeeping. This is a second block promo in a
+row, so it had to earn the slot on something other than "there is a new
+playlist." What it actually argues is a fact about the *library*: this is a
+deep-catalogue collection where most hours you hear nothing you already
+own, and a room full of people wants the opposite of that. The block is how
+both get served. That is a music point with a promo attached rather than
+the reverse.
+
+**Nothing in it can rot.** No count, no artist, no date. The only concrete
+fact is the window, which is a property of the schedule — if the window
+moves, re-cut this.
+
+`interstitials-dj-loop` (32) only, not `interstitials-overnight`. Clip 12
+went in both because it reads correctly at any hour; this one has nothing
+to say at four in the morning, and overnight is meant to be quieter.
+
+Delivery: 414 characters in 36.68s = **11.29 char/s**, high in the
+8.86–12.09 range across 18 takes. Padded to 40.70s.
+
+**Next clip is music. No block promos.**
+
+> This is DJ Loop on C L C Radio. This station is a deep crate. Most hours
+> you can ride here and not hear one record you already own, and that is on
+> purpose. Friday and Saturday, eight until midnight, I turn it around. Four
+> hours of nothing but the ones a whole room already knows the words to. The
+> ones built to be shouted, not studied. Deep cuts the rest of the week.
+> Those two nights, turn it up and bring people.

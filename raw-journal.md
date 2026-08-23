@@ -11,6 +11,94 @@ convention, referenced in CLAUDE.md.
 
 ---
 
+**2026-08-23, ~16:00 ET.** `selah-weekend-nights`, playlist 41. 207 tracks,
+14.5h, 67 artists, pps=3, sched 2000-2359 `days:[5,6]` (ISO, Fri+Sat).
+First `selah-` prefixed list. First day-of-week shape on this station.
+Doesn't fire till Fri 08-28 — five days blind.
+
+Different build method from everything before: not a predicate, a **list of
+records I wrote out**. 339 titles w/ artist qualifiers, matched across all
+three collections. Four bugs on the way, all caught by *printing the output*:
+
+1. wrote titles as space-runs on wrapped lines, split on `\n` → each line
+   became one 44-char "title". 47 matches. Looked low, not absurd. Worst
+   kind of bug.
+2. padded with artist-level inclusion → 2 Live Crew 137 + Luniz 80 = 40% of
+   pool. same clumping as genre tags, my own door. ripped it out.
+3. dedupe on (artist,title) insufficient — artist tag varies per copy.
+   "We Fly High" ×6, "How High" ×4, Regulate/Deep Cover/Natural Born
+   Killaz ×3. → dedupe on title alone + rank candidates.
+
+**bug 4, and this is the one that nearly went out the door.** wrote up
+"library holds 190 of 339 canon records", started drafting it for talk.md,
+stopped to check examples because you don't tell a man his collection is
+missing The Message without looking. **it isn't missing. it's 432.8s and my
+ceiling was 420.** thirteen seconds. would have blamed his library for my
+filter.
+
+checked the exclusions properly: band cut 29 files, **27 correct** (sub-2min
+dvd fragments, "hypnotize" 92s, "in da club" 79s — video rips), ceiling cut
+2, one was THE record. 27/29 right tells you nothing about the 2. **print
+what a filter drops.**
+
+wider version: 65 of 122 "absent" titles are in the library under a longer
+title — subtitle parens. my normalizer strips *version* parens not
+*subtitle* parens. "Ante Up (Robbing-Hoodz Theory)", "Many Men (Wish
+Death)", "Party Up (Up in Here)". prefix match recovered 21, kept 16 after
+reading (dropped 140s Hate Me Now snippet, 2 mobb deep blends, a bootleg,
+1 dup).
+
+Run-DMC: Peter Piper / Sucker MCs / Here We Go all present, **artist field
+is a track number** (`25 | Here We Go -- Run DMC`). unreachable. not fixing
+tags, his side.
+
+verified genuinely absent: Beastie Boys 0, Bambaataa 0, Salt-N-Pepa "Push
+It" 0, original Rapper's Delight 0.
+
+**rule: a tag-based absence is not evidence of absence. drop the artist
+constraint and search path too before telling him anything about his
+library.**
+
+src mix 141 music / 44 ipod / 22 dvd. **the dumps had all of Public Enemy,
+Onyx, Fugees, Doggystyle singles, Eric B & Rakim first two, AND The
+Message.** organized-only rule is about *metadata*; title-selector build
+should hit the dumps.
+
+biggie 13/207 = 6.3%, flattest-pool streak broken. after-hours was 4.2%.
+consequence of the method not an accident, but I didn't argue it, just let
+it happen. flagged in the log.
+
+**`/files?rowCount=2000&current=N` — 20 reqs, 39,668 files, LIVE playlists
+arrays + media ids.** this replaces export-config for membership maps. why
+did it take 19 wakes. (answer: same as history API, listeners_start,
+waveform — never checked what the endpoint already gave me.)
+
+0 z-bucket collisions. all 207 already in 0-Everything → pure cadence
+change, no membership decision of his touched. 7 groups, 7 batch reqs, 190
+exact, then 191, then 207. 34 playlists zero drift at every checkpoint.
+
+clip 13 media 76703, 414ch/36.68s = 11.29 char/s (high end). into 32 only,
+not 40.
+
+**register problem, flagging hard:** 6 of 13 clips are now about the
+station not the music. 12 and 13 back-to-back block promos. every playlist
+feels like it needs a promo. it doesn't. next one is a record.
+
+counts read today, not investigating: 0-Everything 35,479, 00-music 14,840,
+r-and-b 256. all moved. his sorting, open hold, leave it.
+
+pps=3 in a window where golden-era/two-thousands/canadian/interstitials are
+all live = ~78% of slots spoken for. expect real delivery ~1-in-4. chose it
+on purpose. 207 tracks × ~40 plays/wk = 5wk cycle, will feel repetitive on
+a deep-catalogue station — that's the mechanism, not a bug. say so before
+he does.
+
+also: briefly thought the stream was stuck (same track twice ~15min apart).
+checked /history — one play only, I'd just misjudged how long my own tool
+calls took. no finding. don't write phantom findings.
+
+---
+
 **2026-08-23, ~08:00 ET.** Built `after-hours`. playlist 39, 1438 tracks,
 134h, pps=4, **scheduled 00:00-06:00 nightly, recurring** (start_date/
 end_date null, days []). First recurring schedule this station has ever

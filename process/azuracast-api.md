@@ -224,6 +224,37 @@ The rule that follows:
   all 33 pre-existing playlists, which is the only reason the stale export
   was a finding rather than an incident.
 
+### Use paginated `/files` for the membership map instead - it is live
+
+**Found 2026-08-23, 19th wake.** `/files` takes `rowCount` and `current`:
+
+```
+GET /api/station/{id}/files?rowCount=2000&current=1
+```
+
+It returns `{page, per_page, total, total_pages, rows}`, and **every row
+carries the full live `playlists` array plus the media `id`, `unique_id`
+and `path`**. At `rowCount=2000` the whole library is **20 requests**
+(39,668 files on 2026-08-23) and takes well under a minute with a small
+sleep between pages.
+
+That is the map `PUT /files/batch` actually needs, current as of the moment
+you asked, for about the same effort as one `export-config` - and without
+the staleness problem above. Use it:
+
+- **`/files` paginated → membership map + media ids. Live.**
+- **`export-config` → metadata census (artist/title/album/genre/length).
+  Cached, can lag hours.**
+
+Both are reads, so there is no reason not to take the live one when a write
+depends on it. Still take the `/playlists` `num_songs` census before and
+after regardless - that is the check that proves the write, and it is one
+call each side.
+
+Do not raise `rowCount` much past 2,000 to save requests; 20 small
+paginated reads is deliberately gentler on the host than a handful of huge
+ones, and host latency is a real constraint here.
+
 ## Build pools on a per-track property when you can
 
 The question that actually predicts whether a filter yields a usable pool
@@ -254,6 +285,82 @@ Two practical notes from building that pool:
 - **Keep title-exclusion regexes narrow.** `\bhidden\b` cut "The Hidden
   Hand", a real record. `intro|outro|interlude|skit` is the safe set. A
   false positive here removes a good track and says nothing.
+
+## Building a pool from a list of named records
+
+A different shape of build from the four above: instead of a predicate over
+metadata, a hand-written list of *records* matched against the library.
+Used for `selah-weekend-nights` (19th wake). Four things this needs that a
+metadata filter does not.
+
+**Pair every title with an artist qualifier.** `title | artist-substring`,
+matched against the normalized artist, with a blank meaning "any". Without
+it, "Warning" pulls six unrelated songs, "Jump" pulls a Lil Eazy-E skit,
+and "Get Low" pulls Memphis Bleek. Generic titles are the norm in this
+genre, not the exception.
+
+**Never fall back to artist-level inclusion to pad a thin result.** Adding
+a handful of "their whole catalogue fits" artists put 2 Live Crew and Luniz
+at 217 of 541 tracks — 40% of the pool, two artists. An artist has a
+discography; only some of it is the single. This is the same clumping as
+per-album genre tags, self-inflicted.
+
+**Dedupe on title alone, not on `(artist, title)`.** Artist tags differ
+between copies of the same record, so `(artist, title)` keeps them all:
+"We Fly High" survived six times (`Jim Jones`, `Jim Jones feat. Baby`,
+`jim jones t.i. young dro baby`, …), "How High" four, "Regulate" /
+"Deep Cover" / "Natural Born Killaz" three each. Dedupe globally by title
+and rank the candidates: organized collection over dump, plain title over
+parenthesised, artist that matches the qualifier, path with a year.
+
+**Drop mixtape-blend credits.** Artist strings like `Various`,
+`Featuring Faith Evans & 112`, `Superstar, Jay Big T, Stack Bundles`, or
+anything containing a raw `&amp;` are DJ blends and bad rips, not the
+record. Filter on `^(various|featuring|dj )`, an HTML entity, or 3+ commas
+in the artist field.
+
+**Search the dumps too, unlike a metadata build.** The standing rule to
+build from `remote/music/` only is about *metadata* quality. When the
+selector is a title you already know, the dumps are fair game and they
+matter: 54 of the 190 anthems came from them, including the entire Public
+Enemy run, Onyx, the Fugees, Snoop's *Doggystyle* singles and Eric B. &
+Rakim's first two records, none of which exist in the organized collection
+at all. Still check the `z-` buckets against live membership before
+writing.
+
+**Match titles by prefix, not equality.** A great many canonical records
+carry a parenthesised second half — "Ante Up (Robbing-Hoodz Theory)",
+"Many Men (Wish Death)", "Party Up (Up in Here)", "Hard Knock Life (Ghetto
+Anthem)", "The Rain (Supa Dupa Fly)", "If I Ruled The World (Imagine
+That)". A normalizer that strips *version* parentheticals (`remix`, `LP
+version`) does not strip those, so exact matching misses all of them: **65
+of 122 apparent absences were this one bug.** Use
+`title == want or title.startswith(want + ' ')` and keep the artist
+qualifier. Read the recoveries — 5 of 21 were snippets, DJ blends or
+duplicates of records already in.
+
+**Read what the filter threw away, not only what it kept.** The 120–420s
+length band on this pool excluded 29 files. Twenty-seven were sub-two-minute
+DVD-dump fragments — "hypnotize" at 92s, "in da club" at 79s — and cutting
+them was exactly right. The ceiling cut two, and one of them was **"The
+Message"** at 432.8 seconds. A 27-for-29 hit rate says nothing about the
+two, and the two are where the damage was. Print the exclusions.
+
+**Read the matched list, in full, before writing anything.** Every failure
+mode above was found by printing the pool and looking at it, and none was
+visible in a count. A first pass that returned 47 matches instead of ~250
+looked low-but-plausible and was actually a list-parsing bug in my own
+input.
+
+**Never report a record as absent from the library on the strength of a
+tag-based search.** Run-DMC's classics ("Peter Piper", "Sucker MCs", "Here
+We Go") are here with **track numbers in the artist field**
+(`25 | Here We Go -- Run DMC`); "Shook Ones Pt. II" is filed as "Shook Ones
+B/W Got It Twisted"; "The Message" is credited to
+`Duke Bootee/Grandmaster Flash & the Furious Five/Grandmaster Melle Mel`.
+Before saying the owner's collection lacks something, search title *and*
+path with the artist constraint dropped. Getting this wrong means telling
+him something false about his own library.
 
 ## This library is loud, and level analysis cannot find a bad rip in it
 
