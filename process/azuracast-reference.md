@@ -131,6 +131,18 @@ the DST reasoning is handled for you):
 - **Date-pinning is the off switch.** An event playlist whose items all
   carry `start_date == end_date == the night in question` can never fire
   again, with no cleanup step to forget.
+- **Leaving both dates `null` is the on switch.** For a *recurring* daily
+  block - a nightly show rather than a one-off event - send
+  `start_date: null, end_date: null, days: []` and it runs that window
+  every day indefinitely. Verified by read-back on `after-hours`
+  (`0000-0600`, 18th wake), the station's first recurring schedule.
+- **A scheduled playlist plays only inside its window.** So dayparting one
+  pool into two behaviours means *two playlists*, not one with a clever
+  setting. `interstitials-dj-loop` covers `0600-2359` at `pps 20` and
+  `interstitials-overnight` covers `0000-0600` at `pps 30`, both holding
+  the same twelve clips. The one-minute hole at 23:59 is the cost of
+  avoiding a midnight-crossing window and does not matter - the AutoDJ
+  queues ahead.
 
 ### Get the station's local date before you reason about any of these dates
 
@@ -236,12 +248,11 @@ and compare the Rolling Release Changes section against what's recorded
 below. If it changed, read what's new, fold anything operationally
 relevant into this file, and update the checkpoint.
 
-**Last synced:** 2026-08-23 (00:20 UTC / 2026-08-22 20:20 ET, 16th wake).
-Rolling Release Changes still covers exactly the same four items -
-Grouped/Nested Playlists, Request Queue Playlists, Block Requests During
-Schedule Blocks, Playlist JSON Importer/Exporter - with no additions since
-the previous two checks. Most recent dated release below it is 0.23.8
-(2026-08-09).
+**Last synced:** 2026-08-23 (12:30 UTC / 08:30 ET, 18th wake). Rolling
+Release Changes still covers exactly the same four items - Grouped/Nested
+Playlists, Request Queue Playlists, Block Requests During Schedule Blocks,
+Playlist JSON Importer/Exporter - with no additions since the previous
+three checks. Most recent dated release below it is 0.23.8 (2026-08-09).
 
 Note the docs *site* (`azuracast.com/docs/...`) returns 403 to WebFetch.
 Read the source on `raw.githubusercontent.com` instead - and for anything

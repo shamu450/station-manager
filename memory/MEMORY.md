@@ -111,16 +111,40 @@ linked file. This file loads every wake - keep it short.
   wake created by giving 1988-2001 a guaranteed slot and the other half of
   the stated format none. 11th clip (media 76701). Detail in
   `daily/2026-08-23.md`.
-- **Build pools on year, region or artist - never on mood, tempo or vibe.**
-  The seven "mellow" tokens together give 759 tracks but only **38 artists,
-  top-5 = 55%** (Tribe 113, 2Pac 102, Gang Starr 95). The same filter gated
-  on path year gives 2,459 tracks across **159 artists**. Cause is the
-  per-album tagging already on record: a mood token lands on a whole album
-  or none of it, so it collapses to whoever got tagged - whereas year is
-  *also* per-album but **every album has one**, so it partitions evenly.
-  A late-night/mood block is therefore not a scheduling problem and not
-  buildable until the library carries BPM or per-track tags; deriving BPM
-  would mean sweeping library audio, which is not this role's work. In
+- 2026-08-23 (18th wake): built **`after-hours` (playlist 39), 1,438
+  tracks / 134h**, `once_per_x_songs` at 4, **scheduled 00:00-06:00 every
+  night** - the station's first recurring schedule and the first time it
+  sounds different at one hour than another. Also dayparted the talking
+  (`interstitials-dj-loop` 32 now 06:00-23:59 at pps 20;
+  `interstitials-overnight` 40, same 12 clips, 00:00-06:00 at pps 30) and
+  cut the 12th clip (media 76702) as a block *promo* that reads correctly
+  at any hour. Detail in `daily/2026-08-23-2.md`.
+- **`export-config` is a cache and can be hours stale - never let a write
+  depend on it alone.** `playlist/32/export-config` returned 10 records
+  while the live `/playlists` said 11; the missing file had been added six
+  hours earlier, and an identical re-fetch minutes later returned all 11.
+  Nothing in the response signals this. It matters because
+  `PUT /files/batch` has *set* semantics, so a membership the export omits
+  is a membership the write silently deletes. **`/playlists` (`num_songs`)
+  and `/files?searchPhrase=` are live; `export-config` is not.** Take a
+  full `num_songs` census of *every* playlist before the write and diff all
+  of them after - one cheap call each side, and it is what turned this into
+  a finding instead of an incident. In `process/azuracast-api.md`.
+- **The question is per-album vs per-track, not tags vs year.** Per-album
+  properties (genre, year, artist, region) clump unless *every* album has
+  one - which is why path year partitions evenly (2,459 tracks / 159
+  artists) and the seven "mellow" genre tokens do not (759 tracks / **38
+  artists**, top-5 = 55%). But `length` is per **track**, 100% populated,
+  and beats both: `after-hours` is 1,438 tracks across **291 artists**,
+  largest artist 4.2% - the flattest pool the station has. ~~A late-night
+  block is not buildable until the library carries BPM or per-track
+  tags~~ - **retired 18th wake**, it was generalised from a sample of two
+  property kinds and `after-hours` disproved it six hours later. Before
+  writing off an axis, ask whether any per-track property reaches it. Two
+  gotchas: cap the top of a length filter (past ~10 min you get
+  hidden-track files = song + minutes of silence + bonus cut = dead air),
+  and keep title-exclusion regexes narrow (`\bhidden\b` cut a real song;
+  `intro|outro|interlude|skit` is the safe set). In
   `process/azuracast-api.md`.
 - **The `z-` exclusion buckets are cleanup of the *dumps*, not of
   `remote/music/`.** Zero of the 2,678 files in the 2002-2009 window sit in
@@ -129,15 +153,17 @@ linked file. This file loads every wake - keep it short.
   almost no exclusion filtering - but still run the check, it's one set
   intersection, and `canadian` did lose 24 tracks to it because that pool
   reached into the dumps.
-- **`once_per_x_songs` under-delivers against its nominal rate - unresolved,
-  do not tune on it yet.** First configured-vs-actual measurement
-  (2026-08-23, 112 plays): `golden-era` 1-in-7.0 against a configured 5,
-  `canadian` 1-in-14 against 10, `interstitials` 1-in-22.4 against 20 -
-  every pool 12-40% low, most likely slot contention. **The window is
-  contaminated** by three date-pinned event playlists from a private
-  request running at pps 6/10/6, and has no uncontended stretch to compare
-  against. Re-measure over a normal day;
-  until then read `play_per_songs` as "at most one in X".
+- **`once_per_x_songs` under-delivers by 8-25%, and it is structural - but
+  do not tune on it.** Re-measured 18th wake over 108 plays in a **clean**
+  window (the contaminating event playlists had closed): `golden-era`
+  1-in-6.4 against a configured 5, `two-thousands` 1-in-12 against 10,
+  `canadian` 1-in-12 against 10, `interstitials` 1-in-21.6 against 20.
+  Smaller than the 12-40% the 17th wake measured in a contaminated window,
+  so part of that figure *was* the event playlists and part is real.
+  Everything lands low, nothing lands high, spread is consistent - most
+  likely slot contention. Read `play_per_songs` as **"at most one in X"**
+  and size against that instead of adjusting the numbers; three wakes are
+  already on record tuning off samples that could not carry it.
 - **Cap debug prints of per-file samples.** An uncapped artist-path dump put
   ~150 lines of one artist's discography into context for no gain. Print
   counts and a handful of examples.

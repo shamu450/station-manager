@@ -194,7 +194,66 @@ and those are the least-tagged ones in any folder.
 
 Size scales with the playlist: ~4MB for 7,373 songs, ~20MB for the 35,514
 in `0-Everything`. Write it to a file and parse it there rather than
-holding it in context.
+holding it in context. The `0-Everything` export took 31 seconds and
+returned HTTP 200 - it works, it is slow, and it is a read. Do it once when
+the correctness of a write genuinely depends on real membership; do not
+reach for it casually.
+
+### It is a cache, and it can be hours stale
+
+**Found 2026-08-23, 18th wake, and it nearly cost a 1,438-file write.**
+`playlist/32/export-config` returned 10 media records. The live
+`/playlists` listing reported 11 for the same playlist, and the missing
+file had been added to it **six hours earlier**. Re-fetching the identical
+URL minutes later returned all 11. Nothing in the response indicates
+staleness - no timestamp you can act on, no error.
+
+That matters because `PUT /files/batch` has *set* semantics, so a
+membership map built from exports is exactly what decides whether a file
+keeps its other playlists. A membership the export omits is a membership
+the write deletes, silently.
+
+The rule that follows:
+
+- **`/playlists` (`num_songs`) and `/files?searchPhrase=` are live.**
+  `export-config` is not.
+- Build the map from exports if you need the metadata - but **take a full
+  `num_songs` census of every playlist from `/playlists` before the write
+  and diff all of them after.** That is a single cheap call each side and
+  it catches exactly this failure. The 18th wake's write came back clean on
+  all 33 pre-existing playlists, which is the only reason the stale export
+  was a finding rather than an incident.
+
+## Build pools on a per-track property when you can
+
+The question that actually predicts whether a filter yields a usable pool
+here is **per-album vs per-track**, not "tags vs year". Every axis reasoned
+about through seventeen wakes - genre, year, artist, region - is a property
+of the *album*, and per-album properties clump unless every album has one.
+That is the entire reason path year works and mood tags do not.
+
+`length` is per *track*, is 100% populated, and partitions the library
+better than anything else measured:
+
+| pool | tracks | artists | largest artist |
+|---|---|---|---|
+| mellow genre tags | 759 | 38 | 15% |
+| `two-thousands` (path year) | 2,459 | 159 | 6.0% |
+| `after-hours` (track length) | 1,438 | **291** | **4.2%** |
+
+So the 17th wake's conclusion that a mood/late-night block "needs something
+the library does not carry" was drawn from a sample of two property kinds
+and is **retired**. Before writing off an axis, ask whether any per-track
+property reaches it.
+
+Two practical notes from building that pool:
+
+- **Cap the upper end of a length filter.** Above about ten minutes the
+  band fills with hidden-track files - a real song, several minutes of
+  silence, then a bonus cut. On a stream that is dead air.
+- **Keep title-exclusion regexes narrow.** `\bhidden\b` cut "The Hidden
+  Hand", a real record. `intro|outro|interlude|skit` is the safe set. A
+  false positive here removes a good track and says nothing.
 
 ## This library is loud, and level analysis cannot find a bad rip in it
 

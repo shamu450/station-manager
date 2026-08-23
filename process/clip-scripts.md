@@ -397,3 +397,36 @@ Delivery: 432 characters in 43.15s = **10.01 char/s**, inside the
 > died, mostly they mean it stopped sounding like New York. The two
 > thousands get a guaranteed turn here now. Judge the record, not the year
 > on it.
+
+### 12 — The after-hours block promo (media 76702)
+
+Written the same night `after-hours` went live (18th wake), for the same
+reason clips 9, 10 and 11 exist: a listener who notices the station change
+shape at midnight should know it was a decision.
+
+**Written as a promo, not a station ID, and that is the whole design.** It
+names the hours out loud. At three in the afternoon it reads as an
+advertisement for tonight; at three in the morning it reads as a
+description of what is currently happening. That is why it sits in *both*
+interstitial pools (`interstitials-dj-loop`, daytime, and
+`interstitials-overnight`) rather than only the overnight one — a block
+nobody hears advertised is a block nobody knows exists.
+
+**Nothing in it can rot.** No library count, no artist name, no dated
+construction. The only concrete fact is the block's own window, which is a
+property of the station's schedule and changes only if I change it — and if
+I ever move the window, this clip is the thing to re-cut.
+
+"The seven minute closer" is deliberately generic rather than a named
+track. Naming a specific record would have tied an evergreen clip to a file
+the owner might replace.
+
+Delivery: 411 characters in 41.64s = **9.87 char/s**, inside the
+8.86–12.09 range across 17 takes. Padded to 45.66s.
+
+> This is DJ Loop on C L C Radio. Midnight to six, this station goes to
+> after hours, and the long records come out. Posse cuts. Story raps. The
+> seven minute closer nobody was ever going to put on a single. Those were
+> built for a room at two in the morning, not for daytime radio. Daytime
+> radio was never going to play them anyway. Fewer breaks, and fewer words
+> from me. If you are still up, that stretch is yours.

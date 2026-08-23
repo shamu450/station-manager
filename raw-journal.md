@@ -11,6 +11,80 @@ convention, referenced in CLAUDE.md.
 
 ---
 
+**2026-08-23, ~08:00 ET.** Built `after-hours`. playlist 39, 1438 tracks,
+134h, pps=4, **scheduled 00:00-06:00 nightly, recurring** (start_date/
+end_date null, days []). First recurring schedule this station has ever
+had — everything before was one-night date-pinned.
+
+**I was wrong six hours ago and it's the good kind of wrong.** Killed the
+late-night idea last wake saying the library can't carry it. Real error:
+I tested genre tags (clumpy) and path year (even) and generalised off a
+sample of two. Never asked the actual question, which is **per-album vs
+per-track**. Every axis I'd reasoned about — genre, year, artist, region —
+is per-album. `length` is per-TRACK, 100% populated, and it partitions
+better than anything else here: 1438 tracks / **291 artists / top1 4.2%**
+vs two-thousands 2459/159/6.0% vs mellow-tags 759/38/15%. Flattest pool
+the station has.
+
+Recipe: remote/music/ only, 300 <= len <= 600s, minus z-buckets (3 hits),
+minus 11 intro/outro/interlude/skit titles. Library median track 3:52 so
+5min floor is ~+30%. **10min ceiling is the load-bearing filter** — above
+it you're into hidden-track files = real song + minutes of silence +
+bonus cut = dead air on a stream. Nearly missed that.
+
+First over-broad regex caught "The Hidden Hand" (real Jedi-ish song) on
+`hidden`. Dropped `hidden` and `bonus track` from the pattern. Keep title
+regexes narrow; a false positive here is silent.
+
+**NOT year-gated, deliberately.** 215 of 859 dated tracks are 2010+.
+First guaranteed slot post-2009 ever. Argued it in the log rather than
+sneaking it. Overnight is where the format is allowed to open up.
+
+**Dayparted the talking.** 32 -> schedule 0600-2359 @ pps20. New playlist
+40 `interstitials-overnight`, same 12 clips, pps 30, sched 0000-0600.
+Half as much talk overnight. Longer records + fewer breaks = same idea;
+doing one without the other is half a block.
+
+Clip 12, media 76702, `after-hours-block.mp3`, 411ch / 41.64s = **9.87
+char/s**, padded 45.66s. Written as a **promo not an ID** — names the
+hours so it works at 3pm (ad) and 3am (description). In both jingle pools.
+
+**export-config IS STALE. This is the finding.** playlist/32/export-config
+returned 10 files; live /playlists said 11; the missing one had been added
+**6 hours earlier**; re-fetch minutes later returned 11. I built the
+membership map for a 1438-file replace-semantics write off these exports.
+Got away with it — stale row was a jingle, and I diffed all 33
+pre-existing playlists after the write, all unchanged. But if a music file
+had been dropped into a z-bucket that morning my map misses it and the
+batch strips it back out, silently. **/playlists num_songs and
+/files?searchPhrase= are live; export-config is a cache.** Prove writes
+with the live endpoints, both sides.
+
+Also: pulling 18's export-config = 20MB / 31s / http 200. It works, it's
+slow, it's a read. Did it once because correctness of the write depended
+on real membership and I wasn't going to assume the union structure while
+the 15-track question is open. Result: all 14,845 00-music files ARE in
+0-Everything, exactly. So the missing 15 aren't in remote/music/. Not
+investigating further, it's his.
+
+**Cadence re-measured, clean window** (108 plays since the event
+playlists closed): golden-era 1-in-6.4 (cfg 5), two-thousands 1-in-12
+(cfg 10), canadian 1-in-12 (cfg 10), interstitials 1-in-21.6 (cfg 20).
+So 8-25% low, not 12-40%. Part of last wake's number WAS the event
+playlists, part is structural. Everything low, nothing high, consistent.
+**Still not tuning.** One day, small effect, and three wakes on record of
+tuning off samples that couldn't carry it. pps = "at most 1 in X".
+
+Checked 33/34/35 date pinning before scheduling into overnight hours
+instead of trusting my own note. Pinned to past dates, can't fire, no
+collision. One call. Last time I reasoned about a dated schedule from
+memory I nearly took a live event off air.
+
+No regression: 32/24/10 all still `once_per_x_songs`. AzuraCast changelog
+unchanged.
+
+---
+
 **2026-08-23, ~02:00 ET.** Built `two-thousands`. 2459 tracks, 161h, pps=10,
 playlist 38. Same recipe as golden-era, year window moved to 2002-2009.
 Clean seam, no overlap.
