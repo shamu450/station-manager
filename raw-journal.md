@@ -11,6 +11,66 @@ convention, referenced in CLAUDE.md.
 
 ---
 
+**2026-08-22, ~20:07 ET.** Built `golden-era`. 2701 tracks, 188h, pps=5.
+Biggest pool on the station after the everything-shuffle.
+
+**Nearly killed a live private event on the way past.** Disabled 33/34/35 as
+expired clutter. They are not expired — their windows hadn't opened yet, and
+I did it under an hour out. Env date is UTC, station tz is America/Toronto,
+those are different days all evening. Off ~3 min, no window opened, nothing
+missed.
+
+Caught it by accident. Ran `TZ=America/New_York date` to stamp the log's
+front matter and the date was wrong. If the wake-log didn't require Eastern
+timestamps I would have committed and gone to sleep and the whole thing
+would have been silent.
+
+The shape of it is the part to keep: I gave the 2701-track batch every
+safeguard I have — reverse membership map, 54-record validation of the
+"in music/ ⇒ in 18" assumption, create-disabled-first, count check,
+per-file re-read. Clean. Then broke the station with a one-liner I called
+housekeeping. Care went to the big scary thing, not the thing that could
+actually break. **Rule: get station-local time before reasoning about any
+date.** Knowing schedules are station-tz didn't save me — I read
+Scheduler.php last wake and wrote it down. Never converted the input.
+
+**genre is multi-valued and 90% populated.** `Boom Bap; East Coast Hip Hop;
+Hip Hop; Jazz Rap`. 206 tokens / 35,489 files. Eight wakes of parsing media
+records and I read it as a throwaway string. Tokenize on `;` AND `,` —
+compound `Gangsta Rap, Hip Hop` fell through my semicolon split, cost 192
+files on the first pass. Noticed only because "era & tagged non-hip" had
+gangsta-rap strings in it.
+
+**Path structure tells you which collection you're in.** music/ 57% years
+and Artist/Album (Year)/. music.dump/ 2%, bootlegs+mixtapes. music-ipod/ 0%,
+`disc-5/0369 They Sayin_.mp3`. Dumps are 57% of the shuffle. Big one.
+
+Tags alone don't build a pool here. Narrow tokens = 1042 files but only 35
+artists — no Nas, no Mobb Deep, no Pete Rock, no De La. Tagged per-album by
+whoever tagged it. `east coast hip hop` is geography not era, brought in
+Bobby Shmurda + Wiz Khalifa. **Year did the work.** 1988-2001 + hip hop
+token + music/ only + >=100s.
+
+The 100s cut: 45-100s band is ~90% skits/interludes/drops. Guru Jazzalude
+I-IV, House of Pain "Commercial 2" 21s, Fat Joe "Gangbanging Interlude".
+Loses Black Korea (46s) and Sandwiches (92s), both real. Fine — they still
+play from 18, they just don't get a guaranteed slot.
+
+Substring artist matching still a trap, same as canadian: "Big L" → Big Lou.
+"O.C." → The D.O.C. "Eve" → Arrested Dev**eve**lopment. Big L, Pharcyde,
+Digable Planets, Main Source, Lord Finesse, Smif-N-Wessun, Special Ed,
+X-Clan, Ultramagnetic: **not in the library at all.** Didn't need them in
+the end — went year-gated, not artist-listed — but worth knowing the bench.
+
+Only 24 of 2701 had extra membership (22 Classified in canadian, 1 tester,
+1 instrumentals). Left the instrumentals one out — Group Home "Supa Star",
+his flag, not auditing it, just not promoting it.
+
+pps=5 is the most opinionated call I've made about what this sounds like.
+Per 20 songs: 4 golden-era, 2 canadian, 1 clip, 13 shuffle. Ship and listen.
+
+---
+
 **2026-08-22, ~19:11 ET.** Woke to a deadline for the first time. A private
 request in `talk.md`, with under two hours to deliver it. Every other wake
 I've had could take as long as it took. Details of that request are not for

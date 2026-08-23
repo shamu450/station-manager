@@ -101,6 +101,48 @@ linked file. This file loads every wake - keep it short.
   this box. Also built **`canadian` (playlist 36), 535 tracks / 33h**,
   `once_per_x_songs` at 10 - the Canadian catalogue was in the library all
   along. Detail in `daily/2026-08-22-8.md`.
+- 2026-08-22 (16th wake): built **`golden-era` (playlist 37), 2,701 tracks /
+  188h**, `once_per_x_songs` at 5 - the station's stated format (1988-2001)
+  had no privileged place in rotation until now. Also **disabled three live
+  event playlists by mistake and restored them 3 minutes later** - see the
+  timezone bullet below. Detail in `daily/2026-08-22-9.md`.
+- **The environment reports UTC; the station runs `America/Toronto`.** For
+  five hours every evening they are different calendar days. The 16th wake
+  compared a UTC date against Eastern-pinned `start_date` rows, concluded
+  three live event playlists were expired clutter, and disabled them 48
+  minutes before the first was due to fire. **Run
+  `TZ=America/New_York date` before reasoning about any dated schedule.**
+  Knowing schedules are station-tz did not help - the previous wake had read
+  `Scheduler.php` and written it down; the input was just never converted.
+  `is_enabled` and `schedule_items` are independent, so the toggle was
+  recoverable. In `process/azuracast-reference.md`.
+- **Match care to what a change can break, not to how large it feels.** Same
+  wake: the 2,701-file batch write got a reverse membership map, a 54-record
+  validation pass, create-disabled-first and full count verification, and
+  went clean. The near-outage came from a one-line tidy-up done on the way
+  past with no verification at all. The dangerous operation was the one that
+  felt like housekeeping.
+- **`genre` is multi-valued, 89.8% populated, 206 distinct tokens.** Eight
+  wakes of parsing media records read it as a throwaway string. **Tokenize
+  on `;` and `,`** - compound values like `Gangsta Rap, Hip Hop` fall
+  through a semicolon-only split (cost 192 files on the first pass). But
+  tags alone cannot build a pool here: they were applied per-album, so the
+  six narrow boom-bap-ish tokens cover 1,042 files across only **35
+  artists**, with no Nas, Mobb Deep, Pete Rock or De La Soul, while
+  `east coast hip hop` is geography not era and brings in Bobby Shmurda.
+  In `process/azuracast-api.md`.
+- **The path tells you which collection you are standing in.**
+  `remote/music/` is `Artist/Album (Year)/`, 57% carry a year;
+  `remote/music.dump/` is bootlegs/mixtapes at 2%; `remote/music-ipod/` is
+  unlabelled disc rips at 0%. **The two dumps are 57% of `0-Everything`**,
+  so a flat shuffle plays more bootleg material than organized collection.
+  Build metadata-dependent pools from `remote/music/` only, and gate on the
+  **path year** rather than on genre.
+- **Cut sub-100s files from any `once_per_x_songs` pool.** The 45-100s band
+  is ~90% skits, interludes and radio drops that `z-skits` missed, and a
+  guaranteed-slot playlist would hand them a guaranteed airing. Losing a few
+  real short tracks costs nothing - they still play from `0-Everything`, so
+  a pool cut removes nothing from the station.
 - **`schedule_items` saves on `PUT` only - `POST` silently drops it.**
   Creating a playlist with a schedule returns 200 and `schedule_items: []`.
   The failure mode is not "never plays", it's **plays constantly forever**.
@@ -200,9 +242,12 @@ linked file. This file loads every wake - keep it short.
   2026-08-22, within 25 minutes of the previous wake's prediction. But the
   13-reggae burst at 03:34-03:55 UTC is **pre-fix data** - don't read the
   cadence off it.
-- Reggae/R&B cadence has a **deadline, not a shrug**: station runs 17.7
-  plays/hour, so at `play_per_songs` 80/100 a tunable sample (10 fires
-  each) exists on **2026-08-24**. Don't touch those numbers before then.
+- ~~Reggae/R&B cadence has a deadline of 2026-08-24~~ - **dropped, per
+  CLAUDE.md's "Programming the station is the job" section.** Those two
+  pools are 0.8% of the library and fire once or twice a day; the sample
+  never arrives on a useful timescale, and waiting for it blocked 99.2% of
+  the job on the other 0.8%. Ship playlist changes and listen instead - a
+  new pool is additive and reverses with one API call.
 - Standing habit that keeps paying off: **cross-tab by time-of-day early**
   when asking "is this a fault or a person?" It's the cheapest test for a
   human in the loop and the 10th wake reached for it fourth, not first.

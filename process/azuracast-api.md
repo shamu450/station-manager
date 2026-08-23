@@ -228,6 +228,67 @@ Frame-level structure was clean on all eight files examined too: no sync
 losses, no unparsed bytes, and frame-count duration matching the media
 record's `length` to a tenth of a second in every case.
 
+## Programming metadata: genre tokens and path years
+
+Both of these are in responses this role had already been parsing for eight
+wakes. Found 2026-08-22 (16th wake) while building `golden-era`.
+
+**`genre` is multi-valued and populated on 89.8% of the library.** A single
+record reads `Boom Bap; East Coast Hip Hop; Hip Hop; Jazz Rap`. There are
+206 distinct tokens across 35,489 files. Do not read it as one string.
+
+**Tokenize on `;` *and* `,`.** Some files use semicolons, others pack
+several genres into one comma-joined value (`Gangsta Rap, Hip Hop, West
+Coast Hip Hop`). A semicolon-only split silently drops those - it cost 192
+files on the first pass, and was only caught because a bucket labelled
+"tagged non-hip-hop" was visibly full of gangsta-rap strings.
+
+**Years live in folder paths, and the path tells you which collection you
+are in.** This is the more useful half:
+
+| source folder | playlist | files | year in path |
+|---|---|---|---|
+| `remote/music/` | 1 | 14,845 | 57% |
+| `remote/music.dump/` | 13 | 13,276 | 2% |
+| `remote/music-ipod/` | 22 | 7,368 | 0% |
+
+`remote/music/` is structured `Artist/Album (Year)/track.mp3` and tagged.
+`remote/music.dump/` is bootlegs and mixtape rips
+(`VA-..._Mean_Team_Madness_Vol_8-(Bootleg)-2006/`). `remote/music-ipod/` is
+unlabelled disc rips (`disc-5/0369 They Sayin_.mp3`) with no artist or album
+in the path at all. Extract years with `\((19[3-9]\d|20[0-2]\d)\)`.
+
+Consequence for programming: the two dumps are **57% of `0-Everything`**, so
+a flat shuffle plays more bootleg and unlabelled material than organized
+collection. Not a defect - it is what a union-of-everything playlist does -
+but any pool that needs reliable artist/album/year metadata should be built
+from `remote/music/` alone.
+
+### Genre tags will not build a pool by themselves
+
+They were applied per-album by whoever tagged the collection, so they are
+clumpy rather than comprehensive. The narrow tokens (`boom bap`, `jazz rap`,
+`conscious hip hop`, `alternative hip hop`, `underground hip hop`,
+`political hip hop`) match 1,042 files across **only 35 artists** - with no
+Nas, Mobb Deep, Pete Rock, De La Soul or The Roots anywhere in them.
+
+Widening to `east coast hip hop` (1,629) doubles the pool but the tag is
+**geography, not era** - it pulls in Bobby Shmurda and Wiz Khalifa.
+
+**Prefer the path year as the primary gate and use genre only to exclude
+non-hip-hop.** That is what actually worked.
+
+### Filter short files out of any guaranteed-slot pool
+
+The 45-100 second band is roughly 90% skits, interludes, radio drops and
+freestyle fragments that the owner's `z-skits` bucket did not catch - four
+Guru "Jazzalude" tracks, `House of Pain - Commercial 2` (21s), `Fat Joe -
+Gangbanging Interlude`. A `once_per_x_songs` pool hands one of these a
+guaranteed airing. **Cut below 100s.** It costs a few real short tracks
+(Ice Cube's "Black Korea" at 46s, The Beatnuts' "Sandwiches" at 92s), and
+they keep playing from `0-Everything` regardless - a pool cut removes
+nothing from the station.
+
 ## Rotation structure - what actually airs, verified 2026-08-22
 
 Only four playlists are enabled. Their media sets were compared directly:

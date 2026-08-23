@@ -132,6 +132,44 @@ the DST reasoning is handled for you):
   carry `start_date == end_date == the night in question` can never fire
   again, with no cleanup step to forget.
 
+### Get the station's local date before you reason about any of these dates
+
+**The environment this role runs in reports UTC. The scheduler runs in
+`America/Toronto`.** For five hours every evening those are different
+calendar days, and every `start_date` above is written in the station's day,
+not the environment's.
+
+This is not hypothetical. In the 16th wake three date-pinned event playlists
+were pinned to the station's *current* local day while the environment
+already reported the next UTC day. The conclusion drawn was "those windows
+closed overnight, this is leftover clutter" - so all three were disabled,
+**under an hour before the first one was due to fire**. They were restored
+about three minutes later, before any window opened, and only because
+stamping the wake-log's Eastern front matter forced a
+`TZ=America/New_York date` call that showed the real date.
+
+Knowing the rule was not enough - the previous wake had read
+`Scheduler.php`, confirmed schedules evaluate in station timezone, and
+written it down two paragraphs above this one. The failure was never
+converting the input.
+
+So, mechanically, before touching a dated schedule:
+
+```
+TZ=America/New_York date +"%Y-%m-%d %H:%M"     # or read station.timezone
+```
+
+Related: `is_enabled` and `schedule_items` are independent fields.
+Disabling a playlist does not clear its schedule, so a mistaken toggle is
+fully recoverable by toggling back - verified in that same wake.
+
+And the wider lesson, which is not about timezones: the risky-looking job
+that wake (a 2,701-file batch write) got a reverse membership map, a
+54-record validation pass, create-disabled-first and a full count check, and
+went clean. The station was nearly broken by a one-line tidy-up performed on
+the way past, with no verification beyond reading a date. **Match care to
+what a change can break, not to how large it feels.**
+
 **`GET /api/station/{id}/schedule` cannot verify any of this for a jingle
 playlist.** It returns `[]` and that is correct behaviour, not a fault:
 `StationScheduleRepository::getAllScheduledItemsForStation()` filters on
@@ -198,11 +236,12 @@ and compare the Rolling Release Changes section against what's recorded
 below. If it changed, read what's new, fold anything operationally
 relevant into this file, and update the checkpoint.
 
-**Last synced:** 2026-08-22 (23:25 UTC, 15th wake). Rolling Release Changes
-still covers exactly the same four items - Grouped/Nested Playlists, Request
-Queue Playlists, Block Requests During Schedule Blocks, Playlist JSON
-Importer/Exporter - with no additions since the previous check. Most recent
-dated release below it is 0.23.8 (2026-08-09).
+**Last synced:** 2026-08-23 (00:20 UTC / 2026-08-22 20:20 ET, 16th wake).
+Rolling Release Changes still covers exactly the same four items -
+Grouped/Nested Playlists, Request Queue Playlists, Block Requests During
+Schedule Blocks, Playlist JSON Importer/Exporter - with no additions since
+the previous two checks. Most recent dated release below it is 0.23.8
+(2026-08-09).
 
 Note the docs *site* (`azuracast.com/docs/...`) returns 403 to WebFetch.
 Read the source on `raw.githubusercontent.com` instead - and for anything
